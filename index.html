@@ -1,0 +1,2068 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" type="image/png" href="appicon.png">
+  <link rel="manifest" href="manifest.json">
+  <title>NISHANTH TAILORS</title>
+  
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDBW-WpSJIFT4ndQ87rbQ0UGXWBO6cYSF0",
+      authDomain: "daddy-3-f04d0.firebaseapp.com",
+      projectId: "daddy-3-f04d0",
+      storageBucket: "daddy-3-f04d0.firebasestorage.app",
+      messagingSenderId: "700872095381",
+      appId: "1:700872095381:web:6682b09fa7103e11d00d9c",
+      measurementId: "G-2NJHM6SCCC"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    
+    // Make Firebase functions globally available
+    window.firebaseFunctions = {
+      getFirestoreDoc: async (docPath) => {
+        try {
+          const docRef = doc(db, docPath);
+          const docSnap = await getDoc(docRef);
+          return docSnap.exists() ? docSnap.data() : null;
+        } catch (error) {
+          console.error("Error getting document:", error);
+          return null;
+        }
+      },
+      setFirestoreDoc: async (docPath, data) => {
+        try {
+          const docRef = doc(db, docPath);
+          await setDoc(docRef, data);
+          return true;
+        } catch (error) {
+          console.error("Error setting document:", error);
+          return false;
+        }
+      },
+      updateFirestoreDoc: async (docPath, data) => {
+        try {
+          const docRef = doc(db, docPath);
+          await updateDoc(docRef, data);
+          return true;
+        } catch (error) {
+          console.error("Error updating document:", error);
+          return false;
+        }
+      }
+    };
+  </script>
+  
+  <style>
+    :root{
+      --bg1: #0f1724;
+      --bg2: #081126;
+      --glass: rgba(255,255,255,0.08);
+      --glass-2: rgba(255,255,255,0.06);
+      --accent: rgba(120, 220, 255, 0.14);
+      --accent-2: rgba(180, 120, 255, 0.12);
+      --text: #e7f7ff;
+      --muted: rgba(231,247,255,0.7);
+      --radius: 20px;
+      --shadow: 0 10px 30px rgba(2,6,23,0.65), inset 0 1px 0 rgba(255,255,255,0.02);
+      --glass-border: linear-gradient(120deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', Inter, ui-sans-serif, system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      background: radial-gradient(1200px 600px at 10% 20%, rgba(110,30,255,0.12), transparent 6%),
+                  radial-gradient(900px 400px at 90% 80%, rgba(0,200,255,0.08), transparent 8%),
+                  linear-gradient(180deg,var(--bg1),var(--bg2));
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow:hidden;
+    }
+
+    .loader-wrap{
+      position:fixed;
+      inset:0;
+      display:grid;
+      place-items:center;
+      z-index:60;
+      background: linear-gradient(180deg, rgba(4,8,18,0.98), rgba(4,8,18,0.92));
+      transition:opacity 1000ms cubic-bezier(.25,.46,.45,.94), 
+                 transform 900ms cubic-bezier(.25,.46,.45,.94),
+                 backdrop-filter 800ms ease;
+      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px);
+      pointer-events:all;
+    }
+    .loader-wrap.hidden{
+      opacity:0;
+      transform:scale(1.02);
+      pointer-events:none;
+      -webkit-backdrop-filter: blur(0px);
+      backdrop-filter: blur(0px);
+    }
+
+    .loader {
+      width:120px;
+      height:120px;
+      position:relative;
+      display:grid;
+      place-items:center;
+    }
+
+    .spinner-ring{
+      position:absolute;
+      width:100%;
+      height:100%;
+      border-radius:50%;
+      background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 270deg,
+        rgba(120,220,255,0.9) 310deg,
+        rgba(180,120,255,0.9) 350deg,
+        transparent 360deg
+      );
+      animation: ios-spin 1000ms cubic-bezier(.45,.05,.55,.95) infinite;
+      filter: blur(1px);
+    }
+
+    @keyframes ios-spin{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(360deg)}
+    }
+
+    .spinner-glow{
+      position:absolute;
+      width:80%;
+      height:80%;
+      border-radius:50%;
+      background: radial-gradient(circle, rgba(120,220,255,0.15), transparent 70%);
+      animation: glow-pulse 2000ms cubic-bezier(.45,.05,.55,.95) infinite;
+    }
+
+    @keyframes glow-pulse{
+      0%, 100%{opacity:0.4; transform:scale(0.95)}
+      50%{opacity:0.7; transform:scale(1.05)}
+    }
+
+    .loader .logo{
+      position:relative;
+      width:48px;
+      height:48px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 4px 16px rgba(3,8,30,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+      transform: translateZ(0);
+      animation: logo-float 3000ms cubic-bezier(.45,.05,.55,.95) infinite;
+    }
+
+    @keyframes logo-float{
+      0%, 100%{transform:translateY(0px)}
+      50%{transform:translateY(-4px)}
+    }
+
+    .loader .logo::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      border-radius:inherit;
+      pointer-events:none;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.02));
+      mix-blend-mode: overlay;
+      opacity:0.8;
+    }
+
+    .stage{
+      width:min(1200px,96vw);
+      height:min(760px,86vh);
+      position:relative;
+      border-radius:28px;
+      padding:36px;
+      display:grid;
+      grid-template-rows:1fr auto;
+      gap:18px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.04);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      overflow:hidden;
+      z-index:10;
+      transform:translateY(20px) scale(.97);
+      opacity:0;
+      transition:transform 1200ms cubic-bezier(.25,.46,.45,.94), 
+                 opacity 1000ms cubic-bezier(.25,.46,.45,.94);
+    }
+
+    .liquid-layer{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      z-index:1;
+      opacity:0;
+      transition:opacity 1400ms cubic-bezier(.25,.46,.45,.94);
+    }
+    .liquid-svg{
+      width:120%;
+      height:120%;
+      transform-origin:center;
+    }
+
+    .card{
+      position:relative;
+      z-index:4;
+      margin:auto;
+      display:grid;
+      place-items:center;
+      align-content:center;
+      width:70%;
+      height:55%;
+      border-radius:24px;
+      padding:28px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.06);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 12px 40px rgba(2,8,30,0.6), inset 0 1px 0 rgba(255,255,255,0.03);
+      transform:translateY(30px);
+      opacity:0;
+      transition:transform 1400ms cubic-bezier(.25,.46,.45,.94) 200ms, 
+                 opacity 1200ms cubic-bezier(.25,.46,.45,.94) 200ms;
+    }
+
+    .hello{
+      font-weight:700;
+      font-size:64px;
+      letter-spacing:0.5px;
+      color:var(--text);
+      text-align:center;
+      line-height:1;
+      text-shadow: 0 8px 30px rgba(3,12,25,0.6);
+      transform:translateY(20px);
+      opacity:0;
+      filter:drop-shadow(0 6px 18px rgba(0,0,0,0.5));
+      transition:transform 1400ms cubic-bezier(.25,.46,.45,.94) 400ms, 
+                 opacity 1200ms cubic-bezier(.25,.46,.45,.94) 400ms;
+      z-index:6;
+      position:relative;
+      cursor:pointer;
+      user-select:none;
+      -webkit-user-select:none;
+    }
+
+    .hello:hover{
+      transform:translateY(-2px) scale(1.02);
+      filter:drop-shadow(0 8px 24px rgba(120,220,255,0.4));
+      text-shadow: 0 8px 30px rgba(120,220,255,0.5);
+    }
+
+    .hello:active{
+      transform:translateY(0) scale(0.98);
+    }
+
+    .loaded .hello{
+      transition:transform 400ms cubic-bezier(.34,.46,.45,.94), 
+                 opacity 400ms cubic-bezier(.34,.46,.45,.94),
+                 filter 400ms cubic-bezier(.34,.46,.45,.94),
+                 text-shadow 400ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    .passkey-modal{
+      position:fixed;
+      inset:0;
+      display:grid;
+      place-items:center;
+      z-index:100;
+      background: rgba(4,8,18,0.92);
+      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity 600ms cubic-bezier(.25,.46,.45,.94);
+    }
+
+    .passkey-modal.active{
+      opacity:1;
+      pointer-events:all;
+    }
+
+    .passkey-container{
+      width:min(420px,90vw);
+      background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius:24px;
+      padding:32px;
+      box-shadow: 0 20px 60px rgba(2,6,23,0.8), inset 0 1px 0 rgba(255,255,255,0.03);
+      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px);
+      transform:translateY(30px) scale(0.95);
+      opacity:0;
+      transition:transform 700ms cubic-bezier(.25,.46,.45,.94), 
+                 opacity 600ms cubic-bezier(.25,.46,.45,.94);
+    }
+
+    .passkey-modal.active .passkey-container{
+      transform:translateY(0) scale(1);
+      opacity:1;
+    }
+
+    .passkey-title{
+      font-size:24px;
+      font-weight:700;
+      text-align:center;
+      margin-bottom:8px;
+      color:var(--text);
+      text-shadow: 0 4px 20px rgba(3,12,25,0.6);
+    }
+
+    .passkey-subtitle{
+      font-size:15px;
+      text-align:center;
+      color:var(--muted);
+      margin-bottom:28px;
+    }
+
+    .passkey-input{
+      width:100%;
+      padding:16px 20px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius:14px;
+      color:var(--text);
+      font-size:18px;
+      text-align:center;
+      letter-spacing:4px;
+      font-weight:600;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.2), 0 1px 0 rgba(255,255,255,0.05);
+      transition:all 300ms cubic-bezier(.34,.46,.45,.94);
+      outline:none;
+      margin-bottom:20px;
+    }
+
+    .passkey-input:focus{
+      border-color: rgba(120,220,255,0.4);
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.2), 0 0 0 2px rgba(120,220,255,0.15);
+    }
+
+    .passkey-input.error{
+      border-color: rgba(255,100,100,0.5);
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.2), 0 0 0 2px rgba(255,100,100,0.15);
+      animation: shake 400ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    @keyframes shake{
+      0%, 100%{transform:translateX(0)}
+      20%, 60%{transform:translateX(-8px)}
+      40%, 80%{transform:translateX(8px)}
+    }
+
+    .passkey-buttons{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    .passkey-btn{
+      padding:14px 20px;
+      border-radius:14px;
+      font-weight:600;
+      font-size:15px;
+      border:none;
+      cursor:pointer;
+      transition:all 300ms cubic-bezier(.34,.46,.45,.94);
+      outline:none;
+    }
+
+    .passkey-btn.cancel{
+      background: rgba(255,255,255,0.05);
+      color:var(--muted);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .passkey-btn.cancel:hover{
+      background: rgba(255,255,255,0.08);
+      transform:translateY(-2px);
+    }
+
+    .passkey-btn.submit{
+      background: linear-gradient(135deg, rgba(120,220,255,0.2), rgba(180,120,255,0.15));
+      color:var(--text);
+      border: 1px solid rgba(120,220,255,0.2);
+      box-shadow: 0 4px 16px rgba(120,220,255,0.2);
+    }
+
+    .passkey-btn.submit:hover{
+      transform:translateY(-2px);
+      box-shadow: 0 6px 20px rgba(120,220,255,0.3);
+    }
+
+    .passkey-btn.submit:active{
+      transform:translateY(0);
+    }
+
+    .passkey-error{
+      color: rgba(255,150,150,0.9);
+      font-size:14px;
+      text-align:center;
+      margin-top:16px;
+      opacity:0;
+      transform:translateY(-10px);
+      transition:opacity 300ms cubic-bezier(.34,.46,.45,.94), 
+                 transform 300ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    .passkey-error.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    body.transitioning{
+      animation:page-exit 800ms cubic-bezier(.55,.055,.675,.19) forwards;
+    }
+
+    @keyframes page-exit{
+      0%{opacity:1; transform:scale(1)}
+      100%{opacity:0; transform:scale(1.05)}
+    }
+
+    body.transitioning .stage{
+      animation:stage-exit 700ms cubic-bezier(.55,.055,.675,.19) forwards;
+    }
+
+    @keyframes stage-exit{
+      0%{opacity:1; transform:translateY(0) scale(1)}
+      100%{opacity:0; transform:translateY(-30px) scale(0.95)}
+    }
+
+    body.transitioning .robot-container{
+      animation:robot-exit 600ms cubic-bezier(.55,.055,.675,.19) forwards;
+    }
+
+    @keyframes robot-exit{
+      0%{opacity:1; transform:translateY(0) scale(1)}
+      100%{opacity:0; transform:translateY(40px) scale(0.9)}
+    }
+
+    .hello::after{
+      content:'';
+      display:block;
+      height:6px;
+      width:120px;
+      margin:20px auto 0;
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(120,220,255,0.24), rgba(180,120,255,0.18));
+      filter:blur(6px);
+      opacity:0;
+      transform:scaleX(0.7);
+      transition:opacity 1000ms cubic-bezier(.25,.46,.45,.94) 600ms,
+                 transform 1200ms cubic-bezier(.34,.46,.45,.94) 600ms;
+    }
+
+    .sub{
+      color:var(--muted);
+      font-size:15px;
+      text-align:center;
+      opacity:0;
+      transform:translateY(10px);
+      transition:opacity 1000ms cubic-bezier(.25,.46,.45,.94) 700ms,
+                 transform 1200ms cubic-bezier(.25,.46,.45,.94) 700ms;
+    }
+
+    .blob{
+      position:absolute;
+      z-index:2;
+      filter: blur(18px) saturate(1.15);
+      opacity:0;
+      mix-blend-mode:screen;
+      pointer-events:none;
+      transform-origin:center;
+      transition:opacity 1600ms cubic-bezier(.25,.46,.45,.94);
+    }
+
+    .loaded .stage{
+      opacity:1;
+      transform:translateY(0) scale(1);
+    }
+    
+    .loaded .liquid-layer{
+      opacity:0.95;
+    }
+
+    .loaded .card{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .loaded .hello{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .loaded .hello::after{
+      opacity:0.95;
+      transform:scaleX(1);
+    }
+
+    .loaded .sub{
+      opacity:0.9;
+      transform:translateY(0);
+    }
+
+    .loaded .blob{
+      opacity:0.8;
+    }
+
+    .corner-top{
+      position:absolute;
+      top:18px;
+      left:18px;
+      z-index:8;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      opacity:0;
+      transform:translateX(-10px);
+      transition:opacity 1000ms cubic-bezier(.25,.46,.45,.94) 500ms,
+                 transform 1200ms cubic-bezier(.25,.46,.45,.94) 500ms;
+    }
+
+    .loaded .corner-top{
+      opacity:1;
+      transform:translateX(0);
+    }
+
+    .dot{
+      width:12px;
+      height:12px;
+      border-radius:50%;
+      background:rgba(255,255,255,0.07);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,0.02);
+      transition:transform 300ms cubic-bezier(.34,.46,.45,.94);
+    }
+    .dot:hover{transform:scale(1.1)}
+    .dot.r{background:linear-gradient(135deg,#ff7b7b,#ff4d4d)}
+    .dot.y{background:linear-gradient(135deg,#ffd57a,#ffb84d)}
+    .dot.g{background:linear-gradient(135deg,#8dffcf,#3fe6a7)}
+
+    /* Language Switch */
+    .language-switch {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 8;
+      opacity: 0;
+      transition: opacity 1000ms cubic-bezier(.25,.46,.45,.94) 500ms,
+                  transform 1200ms cubic-bezier(.25,.46,.45,.94) 500ms;
+    }
+
+    .loaded .language-switch {
+      opacity: 1;
+    }
+
+    .language-btn {
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 300ms ease;
+    }
+
+    .language-btn.active {
+      background: linear-gradient(135deg, rgba(120,220,255,0.3), rgba(180,120,255,0.3));
+      border-color: rgba(120,220,255,0.4);
+    }
+
+    .language-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Three Dot Menu */
+    .menu-container {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      z-index: 8;
+      opacity: 0;
+      transform: translateX(10px);
+      transition: opacity 1000ms cubic-bezier(.25,.46,.45,.94) 500ms,
+                  transform 1200ms cubic-bezier(.25,.46,.45,.94) 500ms;
+    }
+
+    .loaded .menu-container {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .menu-button {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 300ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    .menu-button:hover {
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+      transform: translateY(-2px);
+    }
+
+    .menu-button.active {
+      background: linear-gradient(135deg, rgba(120,220,255,0.2), rgba(180,120,255,0.15));
+      border-color: rgba(120,220,255,0.3);
+    }
+
+    .menu-dots {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .menu-dot {
+      width: 4px;
+      height: 4px;
+      background: var(--text);
+      border-radius: 50%;
+      transition: all 300ms ease;
+    }
+
+    .menu-button.active .menu-dot {
+      background: rgba(120,220,255,0.9);
+    }
+
+    .menu-dropdown {
+      position: absolute;
+      top: 50px;
+      right: 0;
+      min-width: 180px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 14px;
+      padding: 8px;
+      box-shadow: 0 12px 40px rgba(2,8,30,0.7), inset 0 1px 0 rgba(255,255,255,0.05);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-10px) scale(0.95);
+      transition: all 300ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    .menu-dropdown.active {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0) scale(1);
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 300ms cubic-bezier(.34,.46,.45,.94);
+      text-decoration: none;
+    }
+
+    .menu-item:hover {
+      background: linear-gradient(135deg, rgba(120,220,255,0.15), rgba(180,120,255,0.1));
+      transform: translateX(4px);
+    }
+
+    .menu-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .robot-container{
+      position:fixed;
+      bottom:40px;
+      right:40px;
+      z-index:50;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:12px;
+      opacity:0;
+      transform:translateY(30px) scale(0.9);
+      transition:opacity 1200ms cubic-bezier(.25,.46,.45,.94) 1000ms,
+                 transform 1400ms cubic-bezier(.25,.46,.45,.94) 1000ms;
+    }
+
+    .loaded .robot-container{
+      opacity:1;
+      transform:translateY(0) scale(1);
+    }
+
+    .robot{
+      width:140px;
+      height:140px;
+      position:relative;
+      cursor:pointer;
+      transition:transform 400ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    .robot:hover{
+      transform:scale(1.05);
+    }
+
+    .robot:active{
+      transform:scale(0.95);
+    }
+
+    .robot.talking{
+      animation:robot-talk 600ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    @keyframes robot-talk{
+      0%{transform:scale(1) rotate(0deg)}
+      25%{transform:scale(1.08) rotate(-3deg)}
+      50%{transform:scale(1.12) rotate(3deg)}
+      75%{transform:scale(1.08) rotate(-2deg)}
+      100%{transform:scale(1) rotate(0deg)}
+    }
+
+    .robot-body{
+      position:relative;
+      width:100%;
+      height:100%;
+      background:linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+      border-radius:30px;
+      border:1.5px solid rgba(255,255,255,0.15);
+      box-shadow:0 8px 32px rgba(3,8,30,0.6), inset 0 2px 0 rgba(255,255,255,0.08);
+      -webkit-backdrop-filter:blur(12px);
+      backdrop-filter:blur(12px);
+      overflow:hidden;
+      transition:transform 400ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    .robot-shine{
+      position:absolute;
+      inset:0;
+      background:linear-gradient(135deg, rgba(255,255,255,0.2), transparent 60%);
+      border-radius:inherit;
+      pointer-events:none;
+      mix-blend-mode:overlay;
+    }
+
+    .robot-eyes{
+      position:absolute;
+      top:35%;
+      left:50%;
+      transform:translateX(-50%);
+      display:flex;
+      gap:20px;
+      transition:transform 300ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    .eye{
+      width:22px;
+      height:22px;
+      background:linear-gradient(135deg, #71e0ff, #9b7bff);
+      border-radius:50%;
+      box-shadow:0 4px 16px rgba(120,220,255,0.5), inset 0 -2px 4px rgba(0,0,0,0.2);
+      position:relative;
+      animation:eye-blink 4000ms cubic-bezier(.45,.05,.55,.95) infinite;
+    }
+
+    .eye::after{
+      content:'';
+      position:absolute;
+      top:4px;
+      left:5px;
+      width:8px;
+      height:8px;
+      background:rgba(255,255,255,0.9);
+      border-radius:50%;
+      box-shadow:0 2px 6px rgba(255,255,255,0.3);
+    }
+
+    @keyframes eye-blink{
+      0%, 96%, 100%{transform:scaleY(1)}
+      98%{transform:scaleY(0.1)}
+    }
+
+    .robot.talking .eye{
+      animation:eye-excited 600ms cubic-bezier(.34,.46,.45,.94) infinite;
+    }
+
+    @keyframes eye-excited{
+      0%, 100%{transform:scale(1)}
+      50%{transform:scale(1.2)}
+    }
+
+    .robot-mouth{
+      position:absolute;
+      bottom:32%;
+      left:50%;
+      transform:translateX(-50%);
+      width:40px;
+      height:20px;
+      border:2.5px solid rgba(120,220,255,0.8);
+      border-top:none;
+      border-radius:0 0 20px 20px;
+      transition:all 300ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    .robot.talking .robot-mouth{
+      animation:mouth-talk 200ms cubic-bezier(.34,.46,.45,.94) infinite;
+    }
+
+    @keyframes mouth-talk{
+      0%, 100%{height:20px; border-radius:0 0 20px 20px}
+      50%{height:8px; border-radius:0 0 12px 12px}
+    }
+
+    .robot-antenna{
+      position:absolute;
+      top:-8px;
+      left:50%;
+      transform:translateX(-50%);
+      width:3px;
+      height:18px;
+      background:linear-gradient(180deg, rgba(120,220,255,0.6), transparent);
+      border-radius:999px;
+    }
+
+    .robot-antenna::after{
+      content:'';
+      position:absolute;
+      top:-6px;
+      left:50%;
+      transform:translateX(-50%);
+      width:10px;
+      height:10px;
+      background:radial-gradient(circle, #71e0ff, #9b7bff);
+      border-radius:50%;
+      box-shadow:0 0 12px rgba(120,220,255,0.8);
+      animation:antenna-pulse 2000ms cubic-bezier(.45,.05,.55,.95) infinite;
+    }
+
+    @keyframes antenna-pulse{
+      0%, 100%{transform:translateX(-50%) scale(1); opacity:1}
+      50%{transform:translateX(-50%) scale(1.3); opacity:0.7}
+    }
+
+    .robot-accent{
+      position:absolute;
+      bottom:15px;
+      left:50%;
+      transform:translateX(-50%);
+      width:60px;
+      height:4px;
+      background:linear-gradient(90deg, rgba(120,220,255,0.4), rgba(180,120,255,0.4));
+      border-radius:999px;
+      box-shadow:0 2px 8px rgba(120,220,255,0.3);
+    }
+
+    .welcome-bubble{
+      background:linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.08));
+      border:1.5px solid rgba(255,255,255,0.15);
+      border-radius:18px;
+      padding:10px 18px;
+      color:var(--text);
+      font-size:14px;
+      font-weight:600;
+      box-shadow:0 6px 24px rgba(3,8,30,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+      -webkit-backdrop-filter:blur(10px);
+      backdrop-filter:blur(10px);
+      position:relative;
+      letter-spacing:0.3px;
+      white-space:nowrap;
+      opacity:0;
+      transform:translateY(10px) scale(0.9);
+      transition:opacity 300ms cubic-bezier(.25,.46,.45,.94),
+                 transform 300ms cubic-bezier(.25,.46,.45,.94);
+      pointer-events:none;
+    }
+
+    .loaded .welcome-bubble{
+      opacity:1;
+      transform:translateY(0) scale(1);
+    }
+
+    .welcome-bubble::after{
+      content:'';
+      position:absolute;
+      bottom:-8px;
+      right:30px;
+      width:0;
+      height:0;
+      border-left:8px solid transparent;
+      border-right:8px solid transparent;
+      border-top:8px solid rgba(255,255,255,0.1);
+      filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+
+    .robot.talking .welcome-bubble{
+      animation:bubble-bounce 600ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    @keyframes bubble-bounce{
+      0%{transform:translateY(0) scale(1)}
+      50%{transform:translateY(-4px) scale(1.02)}
+      100%{transform:translateY(0) scale(1)}
+    }
+
+    /* Bird animation */
+    .bird{
+      position:fixed;
+      width:30px;
+      height:30px;
+      z-index:51;
+      pointer-events:none;
+      opacity:0;
+    }
+
+    .bird-body{
+      position:relative;
+      width:100%;
+      height:100%;
+    }
+
+    .bird-shape{
+      width:20px;
+      height:16px;
+      background:linear-gradient(135deg, #ffd57a, #ffb84d);
+      border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+      position:absolute;
+      top:7px;
+      left:5px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .bird-beak{
+      position:absolute;
+      top:13px;
+      left:2px;
+      width:0;
+      height:0;
+      border-top:4px solid transparent;
+      border-bottom:4px solid transparent;
+      border-right:6px solid #ff9d4d;
+    }
+
+    .bird-wing{
+      position:absolute;
+      top:10px;
+      left:8px;
+      width:14px;
+      height:8px;
+      background:linear-gradient(135deg, #ffb84d, #ff9d4d);
+      border-radius:50%;
+      transform-origin:left center;
+      animation:wing-flap 150ms ease-in-out infinite;
+    }
+
+    @keyframes wing-flap{
+      0%, 100%{transform:rotate(-10deg)}
+      50%{transform:rotate(10deg)}
+    }
+
+    .bird-eye{
+      position:absolute;
+      top:10px;
+      left:10px;
+      width:4px;
+      height:4px;
+      background:#333;
+      border-radius:50%;
+    }
+
+    @media (max-width:720px){
+      .hello{font-size:36px}
+      .stage{padding:18px;border-radius:18px}
+      .card{width:92%;height:52%}
+      .robot-container{
+        bottom:20px;
+        right:20px;
+        scale:0.85;
+      }
+      .language-switch {
+        top: 60px;
+        left: 50%;
+      }
+      .menu-container {
+        top: 60px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .liquid-svg ellipse, .spinner-ring, .spinner-glow, .loader .logo, .blob, 
+      .eye, .antenna-pulse, .robot-talk, .mouth-talk, .eye-excited, .bubble-bounce, .wing-flap{
+        animation:none !important;
+      }
+      .loader-wrap, .stage, .card, .hello, .hello::after, .sub, .corner-top, .liquid-layer, 
+      .robot-container, .welcome-bubble{
+        transition:opacity 300ms ease, transform 300ms ease !important;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="loader-wrap" id="loader">
+    <div class="loader" role="status" aria-live="polite" aria-label="Loading">
+      <div class="spinner-glow"></div>
+      <div class="spinner-ring"></div>
+      <div class="logo" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="3" width="18" height="18" rx="5" fill="url(#logoGrad)" stroke="rgba(255,255,255,0.1)" stroke-width="0.6" />
+          <defs>
+            <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#71e0ff" stop-opacity="0.95" />
+              <stop offset="1" stop-color="#b47bff" stop-opacity="0.95" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="passkey-modal" id="passkeyModal" role="dialog" aria-labelledby="passkeyTitle" aria-hidden="true">
+    <div class="passkey-container">
+      <h2 id="passkeyTitle" class="passkey-title" data-english="Enter Passkey" data-tamil="கடவுச்சொல்லை உள்ளிடவும்">Enter Passkey</h2>
+      <p class="passkey-subtitle" data-english="Please enter the passkey to access your workspace" data-tamil="உங்கள் பணியிடத்தை அணுக கடவுச்சொல்லை உள்ளிடவும்">Please enter the passkey to access your workspace</p>
+      <input type="password" class="passkey-input" id="passkeyInput" placeholder="••••••••" maxlength="8" autocomplete="off">
+      <div class="passkey-buttons">
+        <button class="passkey-btn cancel" id="cancelBtn" data-english="Cancel" data-tamil="ரத்து செய்">Cancel</button>
+        <button class="passkey-btn submit" id="submitBtn" data-english="Submit" data-tamil="சமர்ப்பிக்க">Submit</button>
+      </div>
+      <div class="passkey-error" id="passkeyError" data-english="Incorrect passkey. Please try again." data-tamil="தவறான கடவுச்சொல். மீண்டும் முயற்சிக்கவும்.">Incorrect passkey. Please try again.</div>
+    </div>
+  </div>
+
+  <main class="stage" id="stage" role="main" aria-labelledby="helloTitle">
+    <div class="corner-top" aria-hidden="true">
+      <div class="dot r"></div>
+      <div class="dot y"></div>
+      <div class="dot g"></div>
+    </div>
+
+    <div class="language-switch">
+      <button class="language-btn active" id="englishBtn">English</button>
+      <button class="language-btn" id="tamilBtn">தமிழ்</button>
+    </div>
+
+    <div class="menu-container">
+      <div class="menu-button" id="menuButton">
+        <div class="menu-dots">
+          <div class="menu-dot"></div>
+          <div class="menu-dot"></div>
+          <div class="menu-dot"></div>
+        </div>
+      </div>
+      <div class="menu-dropdown" id="menuDropdown">
+        <a href="status.html" class="menu-item">
+          <div class="menu-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 11l3 3L22 4"></path>
+              <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+            </svg>
+          </div>
+          <span data-english="View Status" data-tamil="நிலையைக் காண்க">View Status</span>
+        </a>
+        <a href="#" class="menu-item" id="resetPasskeyBtn">
+          <div class="menu-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+            </svg>
+          </div>
+          <span data-english="Reset Passkey" data-tamil="கடவுச்சொல்லை மீட்டமைக்க">Reset Passkey</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="liquid-layer" aria-hidden="true">
+      <svg class="liquid-svg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="goo">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="18" result="blur"/>
+            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 28 -8" result="goo"/>
+            <feBlend in="SourceGraphic" in2="goo"/>
+          </filter>
+          <linearGradient id="LG" x1="0" x2="1">
+            <stop offset="0" stop-color="#71e0ff" stop-opacity="0.18"/>
+            <stop offset="1" stop-color="#b47bff" stop-opacity="0.14"/>
+          </linearGradient>
+        </defs>
+
+        <g filter="url(#goo)">
+          <ellipse class="blob" cx="180" cy="160" rx="160" ry="120" fill="url(#LG)">
+            <animate attributeName="cx" dur="12s" values="160;220;180;160" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95"/>
+            <animate attributeName="cy" dur="14s" values="150;120;160;150" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95"/>
+            <animate attributeName="rx" dur="11s" values="150;180;140;150" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95"/>
+          </ellipse>
+
+          <ellipse class="blob" cx="600" cy="420" rx="180" ry="140" fill="rgba(255,255,255,0.03)">
+            <animate attributeName="cx" dur="15s" values="640;590;610;640" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95"/>
+            <animate attributeName="cy" dur="12s" values="430;400;420;430" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95"/>
+            <animate attributeName="rx" dur="10s" values="170;200;160;170" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95"/>
+          </ellipse>
+
+          <ellipse class="blob" cx="420" cy="120" rx="120" ry="90" fill="rgba(150,220,255,0.06)">
+            <animate attributeName="cx" dur="13s" values="420;440;400;420" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95"/>
+            <animate attributeName="cy" dur="11s" values="120;100;140;120" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95"/>
+          </ellipse>
+        </g>
+      </svg>
+    </div>
+
+    <section class="card" aria-hidden="false">
+      <h1 id="helloTitle" class="hello" data-english="workspace" data-tamil="பணியிடம்">workspace</h1>
+      <h5 class="sub" data-english="NISHANTH TAILORS" data-tamil="நிஷாந்த் டெய்லர்ஸ்">NISHANTH TAILORS</h5>
+    </section>
+
+    <div class="blob" style="width:280px;height:220px;left:6%;top:12%;background:radial-gradient(circle at 30% 30%, rgba(120,220,255,0.18), transparent 25%);"></div>
+    <div class="blob" style="width:200px;height:160px;right:8%;bottom:6%;background:radial-gradient(circle at 60% 60%, rgba(180,120,255,0.14), transparent 30%);"></div>
+
+  </main>
+
+  <div class="robot-container">
+    <div class="welcome-bubble" id="robotBubble" data-english="Welcome, Nishanth! 👋" data-tamil="வரவேற்கிறோம், நிஷாந்த்! 👋">Welcome, Nishanth! 👋</div>
+    <div class="robot" id="robot" role="button" tabindex="0" aria-label="Interactive robot assistant">
+      <div class="robot-body">
+        <div class="robot-shine"></div>
+        <div class="robot-antenna"></div>
+        <div class="robot-eyes" id="robotEyes">
+          <div class="eye"></div>
+          <div class="eye"></div>
+        </div>
+        <div class="robot-mouth"></div>
+        <div class="robot-accent"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bird" id="bird">
+    <div class="bird-body">
+      <div class="bird-shape"></div>
+      <div class="bird-beak"></div>
+      <div class="bird-wing"></div>
+      <div class="bird-eye"></div>
+    </div>
+  </div>
+
+  <script>
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const INITIALIZATION_KEY = 'Nishanth@123';
+    let CORRECT_PASSKEY = '';
+    let currentLanguage = 'english';
+    let isSecurityInitialized = false;
+
+    // Load security data from Firestore
+    async function loadSecurityData() {
+      try {
+        const securityData = await window.firebaseFunctions.getFirestoreDoc('security/passkey');
+        if (securityData && securityData.passkey) {
+          CORRECT_PASSKEY = securityData.passkey;
+          isSecurityInitialized = true;
+        }
+      } catch (error) {
+        console.error('Error loading security data:', error);
+      }
+    }
+
+    // Save passkey to Firestore
+    async function savePasskeyToFirestore(passkey) {
+      try {
+        const result = await window.firebaseFunctions.setFirestoreDoc('security/passkey', {
+          passkey: passkey,
+          lastUpdated: new Date().toISOString()
+        });
+        return result;
+      } catch (error) {
+        console.error('Error saving passkey:', error);
+        return false;
+      }
+    }
+
+    // Update passkey in Firestore
+    async function updatePasskeyInFirestore(passkey) {
+      try {
+        const result = await window.firebaseFunctions.updateFirestoreDoc('security/passkey', {
+          passkey: passkey,
+          lastUpdated: new Date().toISOString()
+        });
+        return result;
+      } catch (error) {
+        console.error('Error updating passkey:', error);
+        return false;
+      }
+    }
+
+    // Language switching functionality
+    function switchLanguage(lang) {
+      currentLanguage = lang;
+      localStorage.setItem('preferredLanguage', lang);
+      const elements = document.querySelectorAll('[data-english]');
+      elements.forEach(el => {
+        el.textContent = lang === 'tamil' ? el.getAttribute('data-tamil') : el.getAttribute('data-english');
+      });
+      document.getElementById('englishBtn').classList.toggle('active', lang === 'english');
+      document.getElementById('tamilBtn').classList.toggle('active', lang === 'tamil');
+    }
+
+    // Show security initialization modal
+    function showSecurityInitializationModal() {
+      const modal = document.createElement('div');
+      modal.className = 'passkey-modal active';
+      modal.style.zIndex = '120';
+      modal.innerHTML = `
+        <div class="passkey-container">
+          <h2 class="passkey-title">${currentLanguage === 'tamil' ? 'பாதுகாப்பு செயல்படுத்தல்' : 'Security Activation'}</h2>
+          <p class="passkey-subtitle">${currentLanguage === 'tamil' ? 'பணியிடத்தை அணுக, பாதுகாப்பை செயல்படுத்த வேண்டும்' : 'Security needs to be activated to access workspace'}</p>
+          <input type="password" class="passkey-input" id="initKeyInput" placeholder="${currentLanguage === 'tamil' ? 'தொடக்க விசை' : 'Initialization Key'}" autocomplete="off">
+          <div class="passkey-buttons">
+            <button class="passkey-btn cancel" id="initCancelBtn">${currentLanguage === 'tamil' ? 'ரத்து செய்' : 'Cancel'}</button>
+            <button class="passkey-btn submit" id="initSubmitBtn">${currentLanguage === 'tamil' ? 'சரிபார்க்கவும்' : 'Verify'}</button>
+          </div>
+          <div class="passkey-error" id="initKeyError">${currentLanguage === 'tamil' ? 'தவறான தொடக்க விசை' : 'Invalid initialization key'}</div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      const initKeyInput = document.getElementById('initKeyInput');
+      const initSubmitBtn = document.getElementById('initSubmitBtn');
+      const initCancelBtn = document.getElementById('initCancelBtn');
+      const initKeyError = document.getElementById('initKeyError');
+
+      initSubmitBtn.addEventListener('click', () => {
+        if (initKeyInput.value === INITIALIZATION_KEY) {
+          document.body.removeChild(modal);
+          showPasskeySetupModal();
+        } else {
+          initKeyInput.classList.add('error');
+          initKeyError.classList.add('show');
+          initKeyInput.value = '';
+          initKeyInput.focus();
+        }
+      });
+
+      initCancelBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+      });
+
+      initKeyInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          initSubmitBtn.click();
+        }
+      });
+
+      initKeyInput.focus();
+    }
+
+    // Show passkey setup modal
+    function showPasskeySetupModal() {
+      const modal = document.createElement('div');
+      modal.className = 'passkey-modal active';
+      modal.style.zIndex = '120';
+      modal.innerHTML = `
+        <div class="passkey-container">
+          <h2 class="passkey-title">${currentLanguage === 'tamil' ? 'கடவுச்சொல் அமைக்கவும்' : 'Set Passkey'}</h2>
+          <p class="passkey-subtitle">${currentLanguage === 'tamil' ? '8-இலக்க கடவுச்சொல்லை உள்ளிடவும்' : 'Enter an 8-digit passkey'}</p>
+          <input type="password" class="passkey-input" id="newPasskeyInput" placeholder="••••••••" maxlength="8" autocomplete="off" inputmode="numeric">
+          <input type="password" class="passkey-input" id="confirmPasskeyInput" placeholder="${currentLanguage === 'tamil' ? 'கடவுச்சொல்லை உறுதிப்படுத்தவும்' : 'Confirm passkey'}" maxlength="8" autocomplete="off" inputmode="numeric" style="margin-top: 10px;">
+          <div class="passkey-buttons">
+            <button class="passkey-btn cancel" id="passkeyCancelBtn">${currentLanguage === 'tamil' ? 'ரத்து செய்' : 'Cancel'}</button>
+            <button class="passkey-btn submit" id="passkeySubmitBtn">${currentLanguage === 'tamil' ? 'அமைக்கவும்' : 'Set'}</button>
+          </div>
+          <div class="passkey-error" id="passkeySetupError"></div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      const newPasskeyInput = document.getElementById('newPasskeyInput');
+      const confirmPasskeyInput = document.getElementById('confirmPasskeyInput');
+      const passkeySubmitBtn = document.getElementById('passkeySubmitBtn');
+      const passkeyCancelBtn = document.getElementById('passkeyCancelBtn');
+      const passkeySetupError = document.getElementById('passkeySetupError');
+
+      // Enter key navigation
+      newPasskeyInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (newPasskeyInput.value.length === 8) {
+            confirmPasskeyInput.focus();
+          } else {
+            passkeySetupError.textContent = currentLanguage === 'tamil' ? 
+              'கடவுச்சொல் 8 இலக்கங்களாக இருக்க வேண்டும்' : 
+              'Passkey must be 8 digits';
+            passkeySetupError.classList.add('show');
+          }
+        }
+      });
+
+      confirmPasskeyInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          passkeySubmitBtn.click();
+        }
+      });
+
+      passkeySubmitBtn.addEventListener('click', async () => {
+        const newPasskey = newPasskeyInput.value;
+        const confirmPasskey = confirmPasskeyInput.value;
+
+        if (newPasskey.length !== 8) {
+          passkeySetupError.textContent = currentLanguage === 'tamil' ? 
+            'கடவுச்சொல் 8 இலக்கங்களாக இருக்க வேண்டும்' : 
+            'Passkey must be 8 digits';
+          passkeySetupError.classList.add('show');
+          newPasskeyInput.focus();
+          return;
+        }
+
+        if (!/^\d+$/.test(newPasskey)) {
+          passkeySetupError.textContent = currentLanguage === 'tamil' ? 
+            'கடவுச்சொல் எண்களை மட்டும் கொண்டிருக்க வேண்டும்' : 
+            'Passkey must contain only numbers';
+          passkeySetupError.classList.add('show');
+          newPasskeyInput.focus();
+          return;
+        }
+
+        if (newPasskey !== confirmPasskey) {
+          passkeySetupError.textContent = currentLanguage === 'tamil' ? 
+            'கடவுச்சொற்கள் பொருந்தவில்லை' : 
+            'Passkeys do not match';
+          passkeySetupError.classList.add('show');
+          confirmPasskeyInput.focus();
+          return;
+        }
+
+        // Save to Firestore
+        const success = await savePasskeyToFirestore(newPasskey);
+        
+        if (success) {
+          CORRECT_PASSKEY = newPasskey;
+          isSecurityInitialized = true;
+          document.body.removeChild(modal);
+          showSuccessModal();
+        } else {
+          passkeySetupError.textContent = currentLanguage === 'tamil' ? 
+            'பிழை: கடவுச்சொல் சேமிக்கப்படவில்லை' : 
+            'Error: Passkey could not be saved';
+          passkeySetupError.classList.add('show');
+        }
+      });
+
+      passkeyCancelBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+      });
+
+      newPasskeyInput.focus();
+    }
+
+    // Show success modal
+    function showSuccessModal() {
+      const modal = document.createElement('div');
+      modal.className = 'passkey-modal active';
+      modal.style.zIndex = '120';
+      modal.innerHTML = `
+       <div class="passkey-container">
+  <h2 class="passkey-title" style="color: #71e0ff;">${currentLanguage === 'tamil' ? 'வெற்றி! 🎉' : 'Success! 🎉'}</h2>
+  <p class="passkey-subtitle">${currentLanguage === 'tamil' ? 'பாதுகாப்பு வெற்றிகரமாக அமைக்கப்பட்டது' : 'Security successfully configured'}</p>
+  <div class="passkey-buttons" style="display: flex; justify-content: center; grid-template-columns: unset;">
+    <button class="passkey-btn submit" id="successBtn">${currentLanguage === 'tamil' ? 'பணியிடத்திற்குச் செல்லவும்' : 'Go to Workspace'}</button>
+  </div>
+</div>
+      `;
+      document.body.appendChild(modal);
+
+      document.getElementById('successBtn').addEventListener('click', () => {
+        document.body.removeChild(modal);
+        document.body.classList.add('transitioning');
+        setTimeout(() => {
+          window.location.href = 'workspace.html';
+        }, 800);
+      });
+    }
+
+    // Show reset passkey modal
+    function showResetPasskeyModal() {
+      const modal = document.createElement('div');
+      modal.className = 'passkey-modal active';
+      modal.style.zIndex = '120';
+      modal.innerHTML = `
+        <div class="passkey-container">
+          <h2 class="passkey-title">${currentLanguage === 'tamil' ? 'கடவுச்சொல்லை மீட்டமைக்கவும்' : 'Reset Passkey'}</h2>
+          <p class="passkey-subtitle">${currentLanguage === 'tamil' ? 'தற்போதைய கடவுச்சொல்லை உள்ளிடவும்' : 'Enter your current passkey'}</p>
+          <input type="password" class="passkey-input" id="currentPasskeyInput" placeholder="••••••••" maxlength="8" autocomplete="off" inputmode="numeric">
+          <div class="passkey-buttons">
+            <button class="passkey-btn cancel" id="resetCancelBtn">${currentLanguage === 'tamil' ? 'ரத்து செய்' : 'Cancel'}</button>
+            <button class="passkey-btn submit" id="resetSubmitBtn">${currentLanguage === 'tamil' ? 'சரிபார்க்கவும்' : 'Verify'}</button>
+          </div>
+          <div class="passkey-error" id="resetPasskeyError"></div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      const currentPasskeyInput = document.getElementById('currentPasskeyInput');
+      const resetSubmitBtn = document.getElementById('resetSubmitBtn');
+      const resetCancelBtn = document.getElementById('resetCancelBtn');
+      const resetPasskeyError = document.getElementById('resetPasskeyError');
+
+      resetSubmitBtn.addEventListener('click', () => {
+        if (currentPasskeyInput.value === CORRECT_PASSKEY) {
+          document.body.removeChild(modal);
+          showInitializationKeyModal();
+        } else {
+          currentPasskeyInput.classList.add('error');
+          resetPasskeyError.textContent = currentLanguage === 'tamil' ? 
+            'தவறான கடவுச்சொல்' : 
+            'Incorrect passkey';
+          resetPasskeyError.classList.add('show');
+          currentPasskeyInput.value = '';
+          currentPasskeyInput.focus();
+        }
+      });
+
+      resetCancelBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+      });
+
+      currentPasskeyInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          resetSubmitBtn.click();
+        }
+      });
+
+      currentPasskeyInput.focus();
+    }
+
+    // Show initialization key modal for reset
+    function showInitializationKeyModal() {
+      const modal = document.createElement('div');
+      modal.className = 'passkey-modal active';
+      modal.style.zIndex = '120';
+      modal.innerHTML = `
+        <div class="passkey-container">
+          <h2 class="passkey-title">${currentLanguage === 'tamil' ? 'உறுதிப்படுத்தல்' : 'Verification'}</h2>
+          <p class="passkey-subtitle">${currentLanguage === 'tamil' ? 'கடவுச்சொல்லை மீட்டமைக்க தொடக்க விசையை உள்ளிடவும்' : 'Enter initialization key to reset passkey'}</p>
+          <input type="password" class="passkey-input" id="resetInitKeyInput" placeholder="${currentLanguage === 'tamil' ? 'தொடக்க விசை' : 'Initialization Key'}" autocomplete="off">
+          <div class="passkey-buttons">
+            <button class="passkey-btn cancel" id="resetInitCancelBtn">${currentLanguage === 'tamil' ? 'ரத்து செய்' : 'Cancel'}</button>
+            <button class="passkey-btn submit" id="resetInitSubmitBtn">${currentLanguage === 'tamil' ? 'சரிபார்க்கவும்' : 'Verify'}</button>
+          </div>
+          <div class="passkey-error" id="resetInitKeyError">${currentLanguage === 'tamil' ? 'தவறான தொடக்க விசை' : 'Invalid initialization key'}</div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      const resetInitKeyInput = document.getElementById('resetInitKeyInput');
+      const resetInitSubmitBtn = document.getElementById('resetInitSubmitBtn');
+      const resetInitCancelBtn = document.getElementById('resetInitCancelBtn');
+      const resetInitKeyError = document.getElementById('resetInitKeyError');
+
+      resetInitSubmitBtn.addEventListener('click', () => {
+        if (resetInitKeyInput.value === INITIALIZATION_KEY) {
+          document.body.removeChild(modal);
+          showNewPasskeySetupModal();
+        } else {
+          resetInitKeyInput.classList.add('error');
+          resetInitKeyError.classList.add('show');
+          resetInitKeyInput.value = '';
+          resetInitKeyInput.focus();
+        }
+      });
+
+      resetInitCancelBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+      });
+
+      resetInitKeyInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          resetInitSubmitBtn.click();
+        }
+      });
+
+      resetInitKeyInput.focus();
+    }
+
+    // Show new passkey setup modal for reset
+    function showNewPasskeySetupModal() {
+      const modal = document.createElement('div');
+      modal.className = 'passkey-modal active';
+      modal.style.zIndex = '120';
+      modal.innerHTML = `
+        <div class="passkey-container">
+          <h2 class="passkey-title">${currentLanguage === 'tamil' ? 'புதிய கடவுச்சொல் அமைக்கவும்' : 'Set New Passkey'}</h2>
+          <p class="passkey-subtitle">${currentLanguage === 'tamil' ? 'புதிய 8-இலக்க கடவுச்சொல்லை உள்ளிடவும்' : 'Enter a new 8-digit passkey'}</p>
+          <input type="password" class="passkey-input" id="newResetPasskeyInput" placeholder="••••••••" maxlength="8" autocomplete="off" inputmode="numeric">
+          <input type="password" class="passkey-input" id="confirmResetPasskeyInput" placeholder="${currentLanguage === 'tamil' ? 'கடவுச்சொல்லை உறுதிப்படுத்தவும்' : 'Confirm passkey'}" maxlength="8" autocomplete="off" inputmode="numeric" style="margin-top: 10px;">
+          <div class="passkey-buttons">
+            <button class="passkey-btn cancel" id="newPasskeyCancelBtn">${currentLanguage === 'tamil' ? 'ரத்து செய்' : 'Cancel'}</button>
+            <button class="passkey-btn submit" id="newPasskeySubmitBtn">${currentLanguage === 'tamil' ? 'மீட்டமைக்கவும்' : 'Reset'}</button>
+          </div>
+          <div class="passkey-error" id="newPasskeySetupError"></div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      const newResetPasskeyInput = document.getElementById('newResetPasskeyInput');
+      const confirmResetPasskeyInput = document.getElementById('confirmResetPasskeyInput');
+      const newPasskeySubmitBtn = document.getElementById('newPasskeySubmitBtn');
+      const newPasskeyCancelBtn = document.getElementById('newPasskeyCancelBtn');
+      const newPasskeySetupError = document.getElementById('newPasskeySetupError');
+
+      // Enter key navigation
+      newResetPasskeyInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (newResetPasskeyInput.value.length === 8) {
+            confirmResetPasskeyInput.focus();
+          } else {
+            newPasskeySetupError.textContent = currentLanguage === 'tamil' ? 
+              'கடவுச்சொல் 8 இலக்கங்களாக இருக்க வேண்டும்' : 
+              'Passkey must be 8 digits';
+            newPasskeySetupError.classList.add('show');
+          }
+        }
+      });
+
+      confirmResetPasskeyInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          newPasskeySubmitBtn.click();
+        }
+      });
+
+      newPasskeySubmitBtn.addEventListener('click', async () => {
+        const newPasskey = newResetPasskeyInput.value;
+        const confirmPasskey = confirmResetPasskeyInput.value;
+
+        if (newPasskey.length !== 8) {
+          newPasskeySetupError.textContent = currentLanguage === 'tamil' ? 
+            'கடவுச்சொல் 8 இலக்கங்களாக இருக்க வேண்டும்' : 
+            'Passkey must be 8 digits';
+          newPasskeySetupError.classList.add('show');
+          newResetPasskeyInput.focus();
+          return;
+        }
+
+        if (!/^\d+$/.test(newPasskey)) {
+          newPasskeySetupError.textContent = currentLanguage === 'tamil' ? 
+            'கடவுச்சொல் எண்களை மட்டும் கொண்டிருக்க வேண்டும்' : 
+            'Passkey must contain only numbers';
+          newPasskeySetupError.classList.add('show');
+          newResetPasskeyInput.focus();
+          return;
+        }
+
+        if (newPasskey !== confirmPasskey) {
+          newPasskeySetupError.textContent = currentLanguage === 'tamil' ? 
+            'கடவுச்சொற்கள் பொருந்தவில்லை' : 
+            'Passkeys do not match';
+          newPasskeySetupError.classList.add('show');
+          confirmResetPasskeyInput.focus();
+          return;
+        }
+
+        // Update in Firestore
+        const success = await updatePasskeyInFirestore(newPasskey);
+        
+        if (success) {
+          CORRECT_PASSKEY = newPasskey;
+          document.body.removeChild(modal);
+          showResetSuccessModal();
+        } else {
+          newPasskeySetupError.textContent = currentLanguage === 'tamil' ? 
+            'பிழை: கடவுச்சொல் புதுப்பிக்கப்படவில்லை' : 
+            'Error: Passkey could not be updated';
+          newPasskeySetupError.classList.add('show');
+        }
+      });
+
+      newPasskeyCancelBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+      });
+
+      newResetPasskeyInput.focus();
+    }
+
+    // Show reset success modal
+    function showResetSuccessModal() {
+      const modal = document.createElement('div');
+      modal.className = 'passkey-modal active';
+      modal.style.zIndex = '120';
+      modal.innerHTML = `
+        <div class="passkey-container">
+          <h2 class="passkey-title" style="color: #71e0ff;">${currentLanguage === 'tamil' ? 'வெற்றி! 🎉' : 'Success! 🎉'}</h2>
+          <p class="passkey-subtitle">${currentLanguage === 'tamil' ? 'கடவுச்சொல் வெற்றிகரமாக மீட்டமைக்கப்பட்டது' : 'Passkey successfully reset'}</p>
+          <div class="passkey-buttons" style="display: flex; justify-content: center; grid-template-columns: unset;">
+            <button class="passkey-btn submit" id="resetSuccessBtn">${currentLanguage === 'tamil' ? 'சரி' : 'OK'}</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      document.getElementById('resetSuccessBtn').addEventListener('click', () => {
+        document.body.removeChild(modal);
+      });
+    }
+
+    // Handle workspace click
+    function handleWorkspaceClick() {
+      if (!isSecurityInitialized) {
+        showSecurityInitializationModal();
+      } else {
+        showPasskeyModal();
+      }
+    }
+
+    // Show passkey modal
+    function showPasskeyModal() {
+      const passkeyModal = document.getElementById('passkeyModal');
+      passkeyModal.classList.add('active');
+      passkeyModal.setAttribute('aria-hidden', 'false');
+      document.getElementById('passkeyInput').focus();
+    }
+
+    // Hide passkey modal
+    function hidePasskeyModal() {
+      const passkeyModal = document.getElementById('passkeyModal');
+      passkeyModal.classList.remove('active');
+      passkeyModal.setAttribute('aria-hidden', 'true');
+      const passkeyInput = document.getElementById('passkeyInput');
+      passkeyInput.value = '';
+      document.getElementById('passkeyError').classList.remove('show');
+      passkeyInput.classList.remove('error');
+    }
+
+    // Validate passkey
+    function validatePasskey() {
+      const enteredPasskey = document.getElementById('passkeyInput').value;
+      
+      if (enteredPasskey === CORRECT_PASSKEY) {
+        hidePasskeyModal();
+        document.body.classList.add('transitioning');
+        
+        setTimeout(() => {
+          window.location.href = 'workspace.html';
+        }, 800);
+      } else {
+        const passkeyInput = document.getElementById('passkeyInput');
+        passkeyInput.classList.add('error');
+        document.getElementById('passkeyError').classList.add('show');
+        passkeyInput.value = '';
+        passkeyInput.focus();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const loader = document.getElementById('loader');
+      const stage = document.getElementById('stage');
+      const passkeyInput = document.getElementById('passkeyInput');
+      const submitBtn = document.getElementById('submitBtn');
+      const cancelBtn = document.getElementById('cancelBtn');
+      const robot = document.getElementById('robot');
+      const robotBubble = document.getElementById('robotBubble');
+      const robotEyes = document.getElementById('robotEyes');
+      const bird = document.getElementById('bird');
+      const menuButton = document.getElementById('menuButton');
+      const menuDropdown = document.getElementById('menuDropdown');
+      const resetPasskeyBtn = document.getElementById('resetPasskeyBtn');
+      const englishBtn = document.getElementById('englishBtn');
+      const tamilBtn = document.getElementById('tamilBtn');
+      
+      // Load security data from Firestore
+      await loadSecurityData();
+      
+      const savedLang = localStorage.getItem('preferredLanguage');
+      switchLanguage(savedLang === 'tamil' ? 'tamil' : 'english');
+
+      // Language button event listeners
+      englishBtn.addEventListener('click', () => switchLanguage('english'));
+      tamilBtn.addEventListener('click', () => switchLanguage('tamil'));
+
+      // Menu toggle functionality
+      menuButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        menuButton.classList.toggle('active');
+        menuDropdown.classList.toggle('active');
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!menuButton.contains(e.target) && !menuDropdown.contains(e.target)) {
+          menuButton.classList.remove('active');
+          menuDropdown.classList.remove('active');
+        }
+      });
+
+      // Reset passkey button
+      resetPasskeyBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        menuButton.classList.remove('active');
+        menuDropdown.classList.remove('active');
+        if (isSecurityInitialized) {
+          showResetPasskeyModal();
+        } else {
+          // If security is not initialized, show initialization modal
+          showSecurityInitializationModal();
+        }
+      });
+
+      const fakeLoadTime = prefersReducedMotion ? 400 : 1800;
+
+      setTimeout(() => {
+        loader.classList.add('hidden');
+
+        setTimeout(()=>{
+          document.body.classList.add('loaded');
+          stage.setAttribute('aria-hidden','false');
+          stage.querySelector('.hello').setAttribute('aria-live','polite');
+          
+          // Start idle animations after page loads
+          if(!prefersReducedMotion) {
+            startIdleAnimations();
+          }
+        }, 600);
+      }, fakeLoadTime);
+
+      // Subtle parallax on mouse move
+      if(!prefersReducedMotion){
+        document.addEventListener('mousemove', e => {
+          const x = (e.clientX/window.innerWidth - 0.5) * 10;
+          const y = (e.clientY/window.innerHeight - 0.5) * 10;
+          stage.style.transform = `translateY(${y/8}px) translateX(${x/12}px)`;
+        });
+      }
+
+      // Interactive robot
+      let isTalking = false;
+      let talkTimeout;
+      let idleInterval;
+      let lookAtPointerInterval;
+      let birdInterval;
+
+      const messages = {
+        bored: {
+          english: ["I'm bored... 😴", "Nothing happening here... 🥱", "So quiet today... 😪"],
+          tamil: ["சலிப்பாக இருக்கிறது... 😴", "இங்கு எதுவும் நடக்கவில்லை... 🥱", "இன்று மிகவும் அமைதியாக உள்ளது... 😪"]
+        },
+        pointer: {
+          english: ["Hey, I see you! 👀", "What are you doing? 🤔", "Following your moves! 🎯"],
+          tamil: ["ஏய், நான் உன்னைப் பார்க்கிறேன்! 👀", "நீங்கள் என்ன செய்கிறீர்கள்? 🤔", "உங்கள் நகர்வுகளைப் பின்பற்றுகிறேன்! 🎯"]
+        },
+        bird: {
+          english: ["A bird! 🐦", "Look at that! 😮", "Tweet tweet friend! 🎵"],
+          tamil: ["ஒரு பறவை! 🐦", "அதைப் பாருங்கள்! 😮", "சிட் சிட் நண்பரே! 🎵"]
+        },
+        click: {
+          english: ["Hello there! 👋", "Need something? 😊", "I'm here to help! 🤖"],
+          tamil: ["வணக்கம்! 👋", "ஏதாவது தேவையா? 😊", "நான் உதவ இங்கே இருக்கிறேன்! 🤖"]
+        }
+      };
+
+      const updateBubble = (text) => {
+        robotBubble.style.opacity = '0';
+        robotBubble.style.transform = 'translateY(10px) scale(0.9)';
+        
+        setTimeout(() => {
+          robotBubble.textContent = text;
+          robotBubble.style.opacity = '1';
+          robotBubble.style.transform = 'translateY(0) scale(1)';
+        }, 300);
+      };
+
+      const startTalking = (message) => {
+        if(isTalking) return;
+        
+        isTalking = true;
+        robot.classList.add('talking');
+        
+        if(message) {
+          updateBubble(message);
+        }
+        
+        const talkDuration = prefersReducedMotion ? 800 : (1500 + Math.random() * 1500);
+        
+        clearTimeout(talkTimeout);
+        talkTimeout = setTimeout(() => {
+          robot.classList.remove('talking');
+          isTalking = false;
+        }, talkDuration);
+      };
+
+      // Look around (move eyes)
+      const lookAround = () => {
+        if(isTalking) return;
+        
+        const directions = [
+          { x: -15, y: 0 },  // left
+          { x: 15, y: 0 },   // right
+          { x: 0, y: -10 },  // up
+          { x: 0, y: 10 },   // down
+          { x: -10, y: -8 }, // top-left
+          { x: 10, y: -8 }   // top-right
+        ];
+        
+        const direction = directions[Math.floor(Math.random() * directions.length)];
+        robotEyes.style.transform = `translate(calc(-50% + ${direction.x}px), ${direction.y}px)`;
+        
+        setTimeout(() => {
+          robotEyes.style.transform = 'translateX(-50%)';
+        }, 1500);
+      };
+
+      // Idle behavior - looking around and saying "I'm bored"
+      const idleBehavior = () => {
+        if(Math.random() > 0.4) {
+          lookAround();
+        }
+        
+        if(Math.random() > 0.7) {
+          const boredMsgs = messages.bored[currentLanguage];
+          const boredMsg = boredMsgs[Math.floor(Math.random() * boredMsgs.length)];
+          startTalking(boredMsg);
+        }
+      };
+
+      // Look at pointer
+      const trackPointer = (e) => {
+        if(isTalking) return;
+        
+        const robotRect = robot.getBoundingClientRect();
+        const robotCenterX = robotRect.left + robotRect.width / 2;
+        const robotCenterY = robotRect.top + robotRect.height / 2;
+        
+        const deltaX = e.clientX - robotCenterX;
+        const deltaY = e.clientY - robotCenterY;
+        
+        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        
+        // Only track if pointer is reasonably close
+        if(distance < 500) {
+          const lookX = Math.max(-15, Math.min(15, deltaX / 30));
+          const lookY = Math.max(-10, Math.min(10, deltaY / 40));
+          
+          robotEyes.style.transform = `translate(calc(-50% + ${lookX}px), ${lookY}px)`;
+        }
+      };
+
+      let isTrackingPointer = false;
+      let pointerTrackTimeout;
+
+      const startPointerTracking = (e) => {
+        if(!isTrackingPointer && Math.random() > 0.6) {
+          isTrackingPointer = true;
+          const pointerMsgs = messages.pointer[currentLanguage];
+          const pointerMsg = pointerMsgs[Math.floor(Math.random() * pointerMsgs.length)];
+          startTalking(pointerMsg);
+          
+          clearTimeout(pointerTrackTimeout);
+          pointerTrackTimeout = setTimeout(() => {
+            isTrackingPointer = false;
+            robotEyes.style.transform = 'translateX(-50%)';
+          }, 3000);
+        }
+        
+        if(isTrackingPointer) {
+          trackPointer(e);
+        }
+      };
+
+      // Bird animation
+      const flyBird = () => {
+        if(isTalking) return;
+        
+        // Random start position (off-screen left)
+        const startY = Math.random() * (window.innerHeight - 200) + 100;
+        const robotRect = robot.getBoundingClientRect();
+        const targetX = robotRect.left + robotRect.width / 2;
+        const targetY = robotRect.top - 30;
+        
+        bird.style.left = '-50px';
+        bird.style.top = startY + 'px';
+        bird.style.opacity = '1';
+        
+        // Fly to robot
+        const flyDuration = 2000;
+        const startTime = Date.now();
+        
+        const birdMsgs = messages.bird[currentLanguage];
+        const birdMsg = birdMsgs[Math.floor(Math.random() * birdMsgs.length)];
+        startTalking(birdMsg);
+        
+        const animateFly = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / flyDuration, 1);
+          
+          // Easing function
+          const eased = 1 - Math.pow(1 - progress, 3);
+          
+          const currentX = -50 + (targetX + 50) * eased;
+          const currentY = startY + (targetY - startY) * eased;
+          
+          bird.style.left = currentX + 'px';
+          bird.style.top = currentY + 'px';
+          
+          if(progress < 1) {
+            requestAnimationFrame(animateFly);
+          } else {
+            // Bird sits on robot for a moment
+            setTimeout(() => {
+              // Fly away to the right
+              const flyAwayDuration = 1500;
+              const flyAwayStart = Date.now();
+              
+              const animateFlyAway = () => {
+                const elapsed = Date.now() - flyAwayStart;
+                const progress = Math.min(elapsed / flyAwayDuration, 1);
+                const eased = progress * progress;
+                
+                const awayX = targetX + (window.innerWidth - targetX + 50) * eased;
+                const awayY = targetY - 100 * eased;
+                
+                bird.style.left = awayX + 'px';
+                bird.style.top = awayY + 'px';
+                
+                if(progress < 1) {
+                  requestAnimationFrame(animateFlyAway);
+                } else {
+                  bird.style.opacity = '0';
+                }
+              };
+              
+              animateFlyAway();
+            }, 2000);
+          }
+        };
+        
+        animateFly();
+      };
+
+      // Start all idle animations
+      const startIdleAnimations = () => {
+        // Idle behavior every 5-8 seconds
+        idleInterval = setInterval(() => {
+          idleBehavior();
+        }, 5000 + Math.random() * 3000);
+        
+        // Check for pointer tracking every 2 seconds
+        lookAtPointerInterval = setInterval(() => {
+          // This flag will be checked in mousemove event
+        }, 2000);
+        
+        // Bird flies randomly every 15-25 seconds
+        birdInterval = setInterval(() => {
+          if(Math.random() > 0.5) {
+            flyBird();
+          }
+        }, 15000 + Math.random() * 10000);
+        
+        // Add mousemove listener for pointer tracking
+        document.addEventListener('mousemove', startPointerTracking);
+      };
+
+      // Click/tap interaction
+      robot.addEventListener('click', () => {
+        const clickMsgs = messages.click[currentLanguage];
+        const clickMsg = clickMsgs[Math.floor(Math.random() * clickMsgs.length)];
+        startTalking(clickMsg);
+      });
+      
+      // Keyboard accessibility
+      robot.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          const clickMsgs = messages.click[currentLanguage];
+          const clickMsg = clickMsgs[Math.floor(Math.random() * clickMsgs.length)];
+          startTalking(clickMsg);
+        }
+      });
+
+      // Random idle animations (existing)
+      if(!prefersReducedMotion){
+        setInterval(() => {
+          if(!isTalking && Math.random() > 0.7){
+            robot.style.transform = 'rotate(' + (Math.random() * 4 - 2) + 'deg)';
+            setTimeout(() => {
+              robot.style.transform = '';
+            }, 400);
+          }
+        }, 5000);
+      }
+
+      // Workspace navigation
+      const workspaceTitle = document.getElementById('helloTitle');
+      workspaceTitle.addEventListener('click', handleWorkspaceClick);
+      
+      workspaceTitle.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          handleWorkspaceClick();
+        }
+      });
+
+      submitBtn.addEventListener('click', validatePasskey);
+      cancelBtn.addEventListener('click', hidePasskeyModal);
+      
+      passkeyInput.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter') {
+          e.preventDefault();
+          validatePasskey();
+        }
+      });
+      
+      document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && document.getElementById('passkeyModal').classList.contains('active')) {
+          hidePasskeyModal();
+        }
+      });
+      
+      document.getElementById('passkeyModal').addEventListener('click', (e) => {
+        if(e.target === document.getElementById('passkeyModal')) {
+          hidePasskeyModal();
+        }
+      });
+
+      workspaceTitle.setAttribute('role', 'button');
+      workspaceTitle.setAttribute('tabindex', '0');
+      workspaceTitle.setAttribute('aria-label', 'Navigate to workspace (requires passkey)');
+    });
+  </script>
+</body>
+</html>

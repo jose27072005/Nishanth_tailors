@@ -1,0 +1,3103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Workspace - Nishanth Tailors</title>
+  <style>
+    :root{
+      --bg1: #0f1724;
+      --bg2: #081126;
+      --text: #e7f7ff;
+      --muted: rgba(231,247,255,0.7);
+      --accent: rgba(120, 220, 255, 0.3);
+      --accent-hover: rgba(120, 220, 255, 0.5);
+      --success: rgba(140, 255, 207, 0.3);
+      --danger: rgba(255, 123, 123, 0.3);
+      --warning: rgba(255, 200, 100, 0.3);
+      --info: rgba(100, 200, 255, 0.3);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', Inter, ui-sans-serif, system-ui;
+    }
+
+    *{box-sizing:border-box; margin:0; padding:0}
+    
+    body{
+      min-height:100vh;
+      background: 
+        radial-gradient(1200px 600px at 10% 20%, rgba(110,30,255,0.12), transparent 6%),
+        radial-gradient(900px 400px at 90% 80%, rgba(0,200,255,0.08), transparent 8%),
+        linear-gradient(180deg,var(--bg1),var(--bg2));
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+      opacity:0;
+      animation:page-enter 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      position: relative;
+    }
+
+    /* Updated N Logo Background with Increased Opacity */
+   /* Updated N Logo Background with More Transparency */
+.n-logo-bg {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30vw;
+  font-weight: 900;
+  background: linear-gradient(135deg, #71e0ff, #b47bff, #ff71e0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.3; /* Reduced from 0.8 to 0.3 */
+  animation: logo-float 15s ease-in-out infinite;
+  font-family: 'SF Pro Display', -apple-system, sans-serif;
+  letter-spacing: -5px;
+  text-shadow: 0 0 20px rgba(113, 224, 255, 0.3); /* Reduced opacity */
+}
+
+.n-logo-bg::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(113, 224, 255, 0.08) 0%, rgba(180, 123, 255, 0.04) 40%, transparent 70%); /* Reduced opacity */
+  z-index: -1;
+  animation: pulse 8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); } /* Reduced opacity */
+  50% { opacity: 0.4; transform: translate(-50%, -50%) scale(1.1); } /* Reduced opacity */
+}
+
+    @keyframes logo-float {
+      0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+      50% { transform: translate(-50%, -52%) scale(1.02) rotate(1deg); }
+    }
+
+    @keyframes page-enter{
+      to{opacity:1}
+    }
+
+    .container{
+      max-width:1400px;
+      margin:0 auto;
+      padding:40px 20px;
+      display:grid;
+      grid-template-columns:1fr 320px;
+      gap:24px;
+      min-height:100vh;
+    }
+
+    .header{
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      height:70px;
+      background:linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border-bottom:1px solid rgba(255,255,255,0.1);
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      z-index:100;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 40px;
+      box-shadow:0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .logo{
+      font-size:22px;
+      font-weight:700;
+      letter-spacing:0.5px;
+      background:linear-gradient(135deg, #71e0ff, #b47bff);
+      -webkit-background-clip:text;
+      background-clip:text;
+      -webkit-text-fill-color:transparent;
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+    }
+
+    .language-switch {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .language-btn {
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 300ms ease;
+    }
+
+    .language-btn.active {
+      background: linear-gradient(135deg, rgba(120,220,255,0.3), rgba(180,120,255,0.3));
+      border-color: rgba(120,220,255,0.4);
+    }
+
+    .language-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .menu-btn{
+      width:44px;
+      height:44px;
+      border-radius:12px;
+      background:linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+      border:1px solid rgba(255,255,255,0.1);
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      transition:all 400ms cubic-bezier(0.34, 0.46, 0.45, 0.94);
+      margin-left:auto;
+    }
+
+    .menu-btn:hover{
+      background:linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.08));
+      transform:scale(1.05) rotate(90deg);
+    }
+
+    .main-content{
+      margin-top:90px;
+      display:flex;
+      flex-direction:column;
+      gap:24px;
+    }
+
+    .glass-card{
+      background:linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:24px;
+      padding:32px;
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      box-shadow:0 8px 32px rgba(0,0,0,0.4);
+      transform:translateY(20px);
+      opacity:0;
+      animation:card-enter 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 200ms forwards;
+    }
+
+    @keyframes card-enter{
+      to{transform:translateY(0); opacity:1}
+    }
+
+    .search-section{
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+      align-items:center;
+      justify-content:center;
+      min-height:400px;
+    }
+
+    .search-section.has-results{
+      min-height:auto;
+      align-items:stretch;
+    }
+
+    .input-group{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      width:100%;
+      max-width:500px;
+      margin: 0 auto;
+    }
+
+    .input-label{
+      font-size:14px;
+      font-weight:600;
+      color:var(--muted);
+      letter-spacing:0.5px;
+      text-align:center;
+    }
+
+    /* Animated Search Container - Centered */
+    .search-container{
+      position:relative;
+      width:100%;
+      max-width:500px;
+      margin:0 auto;
+    }
+
+    .white,
+    .border,
+    .darkBorderBg,
+    .glow {
+      max-height: 70px;
+      max-width: 100%;
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      overflow: hidden;
+      z-index: -1;
+      border-radius: 16px;
+      filter: blur(3px);
+      pointer-events: none;
+    }
+
+    .search-input {
+      background-color: #010201;
+      border: none;
+      width: 100%;
+      height: 56px;
+      border-radius: 14px;
+      color: white;
+      padding: 0 60px;
+      font-size: 16px;
+      font-family: inherit;
+      position: relative;
+      z-index: 2;
+    }
+
+    .search-input::placeholder {
+      color: #c0b9c0;
+    }
+
+    .search-input:focus {
+      outline: none;
+    }
+
+    #input-mask {
+      pointer-events: none;
+      width: 100px;
+      height: 20px;
+      position: absolute;
+      background: linear-gradient(90deg, transparent, #010201);
+      top: 18px;
+      left: 70px;
+      z-index: 3;
+      transition: opacity 0.3s ease;
+    }
+
+    #main:focus-within > #input-mask {
+      opacity: 0;
+    }
+
+    #pink-mask {
+      pointer-events: none;
+      width: 30px;
+      height: 20px;
+      position: absolute;
+      background: #cf30aa;
+      top: 10px;
+      left: 5px;
+      filter: blur(20px);
+      opacity: 0.8;
+      transition: all 2s;
+      z-index: 1;
+    }
+
+    #main:hover > #pink-mask {
+      opacity: 0;
+    }
+
+    .white {
+      max-height: 63px;
+      border-radius: 14px;
+      filter: blur(2px);
+    }
+
+    .white::before {
+      content: "";
+      z-index: -2;
+      text-align: center;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(83deg);
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background-repeat: no-repeat;
+      background-position: 0 0;
+      filter: brightness(1.4);
+      background-image: conic-gradient(
+        rgba(0, 0, 0, 0) 0%,
+        #a099d8,
+        rgba(0, 0, 0, 0) 8%,
+        rgba(0, 0, 0, 0) 50%,
+        #dfa2da,
+        rgba(0, 0, 0, 0) 58%
+      );
+      transition: all 2s;
+    }
+
+    .border {
+      max-height: 59px;
+      border-radius: 15px;
+      filter: blur(0.5px);
+    }
+
+    .border::before {
+      content: "";
+      z-index: -2;
+      text-align: center;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(70deg);
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      filter: brightness(1.3);
+      background-repeat: no-repeat;
+      background-position: 0 0;
+      background-image: conic-gradient(
+        #1c191c,
+        #402fb5 5%,
+        #1c191c 14%,
+        #1c191c 50%,
+        #cf30aa 60%,
+        #1c191c 64%
+      );
+      transition: all 2s;
+    }
+
+    .darkBorderBg::before {
+      content: "";
+      z-index: -2;
+      text-align: center;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(82deg);
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background-repeat: no-repeat;
+      background-position: 0 0;
+      background-image: conic-gradient(
+        rgba(0, 0, 0, 0),
+        #18116a,
+        rgba(0, 0, 0, 0) 10%,
+        rgba(0, 0, 0, 0) 50%,
+        #6e1b60,
+        rgba(0, 0, 0, 0) 60%
+      );
+      transition: all 2s;
+    }
+
+    #poda:hover > .darkBorderBg::before {
+      transform: translate(-50%, -50%) rotate(-98deg);
+    }
+
+    #poda:hover > .glow::before {
+      transform: translate(-50%, -50%) rotate(-120deg);
+    }
+
+    #poda:hover > .white::before {
+      transform: translate(-50%, -50%) rotate(-97deg);
+    }
+
+    #poda:hover > .border::before {
+      transform: translate(-50%, -50%) rotate(-110deg);
+    }
+
+    #poda:focus-within > .darkBorderBg::before {
+      transform: translate(-50%, -50%) rotate(442deg);
+      transition: all 4s;
+    }
+
+    #poda:focus-within > .glow::before {
+      transform: translate(-50%, -50%) rotate(420deg);
+      transition: all 4s;
+    }
+
+    #poda:focus-within > .white::before {
+      transform: translate(-50%, -50%) rotate(443deg);
+      transition: all 4s;
+    }
+
+    #poda:focus-within > .border::before {
+      transform: translate(-50%, -50%) rotate(430deg);
+      transition: all 4s;
+    }
+
+    .glow {
+      overflow: hidden;
+      filter: blur(30px);
+      opacity: 0.4;
+      max-height: 130px;
+    }
+
+    .glow:before {
+      content: "";
+      z-index: -2;
+      text-align: center;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(60deg);
+      position: absolute;
+      width: 999px;
+      height: 999px;
+      background-repeat: no-repeat;
+      background-position: 0 0;
+      background-image: conic-gradient(
+        #000,
+        #402fb5 5%,
+        #000 38%,
+        #000 50%,
+        #cf30aa 60%,
+        #000 87%
+      );
+      transition: all 2s;
+    }
+
+    #search-icon {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 3;
+    }
+
+    .suggestions-dropdown{
+      position:absolute;
+      top:100%;
+      left:0;
+      right:0;
+      background:linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+      border:1px solid rgba(255,255,255,0.15);
+      border-radius:12px;
+      margin-top:8px;
+      max-height:200px;
+      overflow-y:auto;
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      z-index:10;
+      display:none;
+    }
+
+    .suggestions-dropdown.active{
+      display:block;
+      animation:dropdown-enter 300ms cubic-bezier(0.34, 0.46, 0.45, 0.94);
+    }
+
+    @keyframes dropdown-enter{
+      from{opacity:0; transform:translateY(-10px)}
+      to{opacity:1; transform:translateY(0)}
+    }
+
+    .suggestion-item{
+      padding:12px 16px;
+      cursor:pointer;
+      transition:all 200ms ease;
+      border-bottom:1px solid rgba(255,255,255,0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .suggestion-item:hover{
+      background:rgba(255,255,255,0.1);
+    }
+
+    .suggestion-item:last-child{
+      border-bottom:none;
+    }
+
+    .suggestion-bill{
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .suggestion-name{
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .suggestion-mobile{
+      font-size: 11px;
+      color: var(--muted);
+      opacity: 0.8;
+    }
+
+    /* Updated Button Group with Professional Design */
+    .btn-group{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top: 20px;
+      width: 100%;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn{
+      height:52px;
+      padding:0 32px;
+      border-radius:14px;
+      border:none;
+      font-size:15px;
+      font-weight:600;
+      font-family:inherit;
+      cursor:pointer;
+      transition:all 400ms cubic-bezier(0.34, 0.46, 0.45, 0.94);
+      letter-spacing:0.3px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+      border-radius: 14px;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .btn-primary{
+      background:linear-gradient(135deg, rgba(120,220,255,0.3), rgba(180,120,255,0.3));
+      color:var(--text);
+      border:1px solid rgba(120,220,255,0.4);
+    }
+
+    .btn-primary:hover{
+      background:linear-gradient(135deg, rgba(120,220,255,0.4), rgba(180,120,255,0.4));
+      transform:translateY(-3px) scale(1.05);
+      box-shadow:0 12px 32px rgba(120,220,255,0.3);
+    }
+
+    .btn-primary:hover::before {
+      opacity: 1;
+    }
+
+    .btn-primary:active{
+      transform:translateY(-1px) scale(1.02);
+    }
+
+    /* Updated Bill Details Layout */
+    .bill-details{
+      display:none;
+      flex-direction:column;
+      gap:24px;
+      margin-top:20px;
+      padding:0;
+      animation:details-slide 500ms cubic-bezier(0.34, 0.46, 0.45, 0.94);
+    }
+
+    @keyframes details-slide{
+      from{opacity:0; transform:translateY(20px)}
+      to{opacity:1; transform:translateY(0)}
+    }
+
+    .bill-details.active{display:flex}
+
+    .bill-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border-radius: 16px 16px 0 0;
+    }
+
+    .bill-info-left {
+      flex: 1;
+    }
+
+    .bill-info-right {
+      text-align: right;
+    }
+
+    .bill-number {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #71e0ff, #b47bff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .bill-customer-name {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .bill-mobile {
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    .bill-status {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .status-pending {
+      background: linear-gradient(135deg, rgba(255,200,100,0.3), rgba(255,170,77,0.2));
+      border: 1px solid rgba(255,200,100,0.4);
+      color: #ffd699;
+    }
+
+    .status-finished {
+      background: linear-gradient(135deg, rgba(140,255,207,0.3), rgba(63,230,167,0.2));
+      border: 1px solid rgba(140,255,207,0.4);
+      color: #6bff9e;
+    }
+
+    .status-delivered {
+      background: linear-gradient(135deg, rgba(100,200,255,0.3), rgba(77,170,255,0.2));
+      border: 1px solid rgba(100,200,255,0.4);
+      color: #71e0ff;
+    }
+
+    .status-cancelled {
+      background: linear-gradient(135deg, rgba(255,123,123,0.3), rgba(255,77,77,0.2));
+      border: 1px solid rgba(255,123,123,0.4);
+      color: #ffaaaa;
+    }
+
+    .bill-dates {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .bill-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      padding: 0 24px;
+    }
+
+    @media (max-width: 768px) {
+      .bill-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .bill-section {
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .detail-label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .detail-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .payment-summary {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .payment-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .payment-row:last-child {
+      border-bottom: none;
+    }
+
+    .payment-label {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .payment-amount {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .total-amount {
+      font-size: 20px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #71e0ff, #b47bff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .balance-amount {
+      color: #ffba08;
+    }
+
+    .advance-amount {
+      color: #6bff9e;
+    }
+
+    .payment-status-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-paid {
+      background: linear-gradient(135deg, rgba(100,255,150,0.3), rgba(63,230,167,0.2));
+      border: 1px solid rgba(100,255,150,0.4);
+      color: #6bff9e;
+    }
+
+    .status-pending {
+      background: linear-gradient(135deg, rgba(255,200,100,0.3), rgba(255,170,77,0.2));
+      border: 1px solid rgba(255,200,100,0.4);
+      color: #ffd699;
+    }
+
+    .bill-footer {
+      padding: 24px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border-radius: 0 0 16px 16px;
+    }
+
+    .action-buttons{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .btn-danger{
+      background:linear-gradient(135deg, rgba(255,123,123,0.3), rgba(255,77,77,0.3));
+      border:1px solid rgba(255,123,123,0.4);
+      color:var(--text);
+      flex:1;
+      max-width:120px;
+    }
+
+    .btn-success{
+      background:linear-gradient(135deg, rgba(140,255,207,0.3), rgba(63,230,167,0.3));
+      border:1px solid rgba(140,255,207,0.4);
+      color:var(--text);
+      flex:1;
+      max-width:120px;
+    }
+
+    .btn-warning{
+      background:linear-gradient(135deg, rgba(255,200,100,0.3), rgba(255,170,77,0.3));
+      border:1px solid rgba(255,200,100,0.4);
+      color:var(--text);
+      flex:1;
+      max-width:120px;
+    }
+
+    .btn-info{
+      background:linear-gradient(135deg, rgba(100,200,255,0.3), rgba(77,170,255,0.3));
+      border:1px solid rgba(100,200,255,0.4);
+      color:var(--text);
+      flex:1;
+      max-width:120px;
+    }
+
+    .btn-danger:hover{
+      background:linear-gradient(135deg, rgba(255,123,123,0.4), rgba(255,77,77,0.4));
+      transform:translateY(-3px) scale(1.05);
+      box-shadow:0 8px 24px rgba(255,123,123,0.3);
+    }
+
+    .btn-success:hover{
+      background:linear-gradient(135deg, rgba(140,255,207,0.4), rgba(63,230,167,0.4));
+      transform:translateY(-3px) scale(1.05);
+      box-shadow:0 8px 24px rgba(140,255,207,0.3);
+    }
+
+    .btn-warning:hover{
+      background:linear-gradient(135deg, rgba(255,200,100,0.4), rgba(255,170,77,0.4));
+      transform:translateY(-3px) scale(1.05);
+      box-shadow:0 8px 24px rgba(255,200,100,0.3);
+    }
+
+    .btn-info:hover{
+      background:linear-gradient(135deg, rgba(100,200,255,0.4), rgba(77,170,255,0.4));
+      transform:translateY(-3px) scale(1.05);
+      box-shadow:0 8px 24px rgba(100,200,255,0.3);
+    }
+
+    .priority-sidebar{
+      margin-top:90px;
+      position:sticky;
+      top:90px;
+      height:fit-content;
+      max-height:calc(100vh - 110px);
+      overflow-y:auto;
+    }
+
+    .priority-card{
+      background:linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:20px;
+      padding:24px;
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      box-shadow:0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    .priority-title{
+      font-size:18px;
+      font-weight:700;
+      margin-bottom:20px;
+      color:var(--text);
+      text-align:center;
+    }
+
+    .priority-item{
+      padding:14px;
+      background:linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:12px;
+      margin-bottom:10px;
+      cursor:pointer;
+      transition:all 400ms cubic-bezier(0.34, 0.46, 0.45, 0.94);
+    }
+
+    .priority-item:hover{
+      background:linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+      transform:translateX(-4px) scale(1.02);
+    }
+
+    .priority-bill{
+      font-size:14px;
+      font-weight:600;
+      color:var(--text);
+    }
+
+    .priority-deadline{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    .priority-progress{
+      font-size:11px;
+      color:var(--muted);
+      margin-top:4px;
+      font-style:italic;
+    }
+
+    .priority-badge{
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:8px;
+      font-size:11px;
+      font-weight:600;
+      margin-top:6px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+    }
+
+    .badge-urgent{
+      background:linear-gradient(135deg, rgba(255,77,77,0.3), rgba(255,123,123,0.2));
+      border:1px solid rgba(255,77,77,0.4);
+      color:#ffaaaa;
+    }
+
+    .badge-soon{
+      background:linear-gradient(135deg, rgba(255,200,77,0.3), rgba(255,170,77,0.2));
+      border:1px solid rgba(255,200,77,0.4);
+      color:#ffd699;
+    }
+
+    .badge-normal{
+      background:linear-gradient(135deg, rgba(120,220,255,0.2), rgba(120,220,255,0.1));
+      border:1px solid rgba(120,220,255,0.3);
+      color:#aae8ff;
+    }
+
+    .no-data{
+      text-align:center;
+      padding:40px 20px;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .modal{
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(4,8,18,0.95);
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      z-index:200;
+      place-items:center;
+      opacity:0;
+      transition:all 500ms cubic-bezier(0.34, 0.46, 0.45, 0.94);
+    }
+
+    .modal.active{
+      display:grid;
+      opacity:1;
+    }
+
+    .modal-content{
+      background:linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+      border:1.5px solid rgba(255,255,255,0.15);
+      border-radius:24px;
+      padding:40px;
+      max-width:500px;
+      width:90%;
+      text-align:center;
+      transform:scale(0.8) translateY(30px);
+      transition:transform 600ms cubic-bezier(0.34, 0.46, 0.45, 0.94);
+    }
+
+    .modal.active .modal-content{
+      transform:scale(1) translateY(0);
+    }
+
+    .modal-title{
+      font-size:24px;
+      font-weight:700;
+      margin-bottom:16px;
+    }
+
+    .modal-text{
+      font-size:16px;
+      color:var(--muted);
+      margin-bottom:32px;
+    }
+
+    .modal-buttons{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+    }
+
+    .qr-image{
+      max-width:300px;
+      width:100%;
+      margin:20px auto;
+      border-radius:16px;
+      border:2px solid rgba(255,255,255,0.1);
+    }
+
+    .mobile-number{
+      font-size:20px;
+      font-weight:700;
+      color:var(--text);
+      margin:16px 0;
+      letter-spacing:1px;
+    }
+
+    .menu-dropdown{
+      position:absolute;
+      top:76px;
+      right:40px;
+      background:linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.08));
+      border:1.5px solid rgba(255,255,255,0.15);
+      border-radius:16px;
+      padding:8px;
+      min-width:200px;
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      box-shadow:0 8px 32px rgba(0,0,0,0.5);
+      display:none;
+      opacity:0;
+      transform:translateY(-10px);
+      transition:all 400ms cubic-bezier(0.34, 0.46, 0.45, 0.94);
+    }
+
+    .menu-dropdown.active{
+      display:block;
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .menu-item{
+      padding:12px 16px;
+      border-radius:10px;
+      cursor:pointer;
+      transition:background 300ms ease;
+      font-size:15px;
+      font-weight:500;
+    }
+
+    .menu-item:hover{
+      background:rgba(255,255,255,0.1);
+      transform:translateX(4px);
+    }
+
+    .loading{
+      text-align:center;
+      padding:20px;
+      color:var(--muted);
+    }
+
+    .items-section{
+      margin-top:20px;
+      padding-top:20px;
+      border-top:1px solid rgba(255,255,255,0.1);
+    }
+
+    .item-card{
+      background:linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border:1.5px solid rgba(255,255,255,0.1);
+      border-radius:14px;
+      padding:20px;
+      margin-bottom:16px;
+      position:relative;
+    }
+
+    .item-card.completed{
+      opacity:0.6;
+      background:linear-gradient(135deg, rgba(140,255,207,0.1), rgba(63,230,167,0.05));
+      border-color:rgba(140,255,207,0.3);
+    }
+
+    .item-card-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:12px;
+    }
+
+    .item-card-title{
+      font-size:18px;
+      font-weight:700;
+      color:var(--text);
+    }
+
+    .item-header-actions{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+
+    .btn-view{
+      background:rgba(120,220,255,0.2);
+      border:1.5px solid rgba(120,220,255,0.3);
+      color:var(--text);
+      padding:8px 16px;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:600;
+      transition:all 300ms;
+      font-size:12px;
+    }
+
+    .btn-view:hover{
+      background:rgba(120,220,255,0.3);
+    }
+
+    .btn-ready{
+      background:rgba(140,255,207,0.2);
+      border:1.5px solid rgba(140,255,207,0.3);
+      color:var(--text);
+      padding:8px 16px;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:600;
+      transition:all 300ms;
+      font-size:12px;
+    }
+
+    .btn-ready:hover{
+      background:rgba(140,255,207,0.3);
+      transform:translateY(-2px);
+    }
+
+    .btn-ready:disabled{
+      opacity:0.5;
+      cursor:not-allowed;
+    }
+
+    .item-info{
+      font-size:14px;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+
+    .item-ready-count{
+      font-size:13px;
+      color:var(--text);
+      margin-top:8px;
+      font-weight:600;
+      padding:8px 12px;
+      background:rgba(140,255,207,0.15);
+      border-radius:8px;
+      display:inline-block;
+    }
+
+    .size-table{
+      width:100%;
+      margin-top:16px;
+      border-collapse:collapse;
+    }
+
+    .size-table th{
+      background:linear-gradient(135deg, rgba(120,220,255,0.2), rgba(180,120,255,0.2));
+      padding:12px;
+      text-align:left;
+      font-size:13px;
+      font-weight:600;
+      border:1.5px solid rgba(255,255,255,0.1);
+    }
+
+    .size-table td{
+      padding:12px;
+      border:1.5px solid rgba(255,255,255,0.1);
+    }
+
+    .size-table-container{
+      max-height:400px;
+      overflow-y:auto;
+      margin-top:16px;
+    }
+
+    .total-section{
+      margin-top:32px;
+      padding:24px;
+      background:linear-gradient(135deg, rgba(120,220,255,0.15), rgba(180,120,255,0.1));
+      border:1.5px solid rgba(120,220,255,0.3);
+      border-radius:14px;
+      text-align:center;
+    }
+
+    .total-label{
+      font-size:16px;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+
+    .total-amount{
+      font-size:36px;
+      font-weight:800;
+      background:linear-gradient(135deg, #71e0ff, #b47bff);
+      -webkit-background-clip:text;
+      background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .back-btn{
+      width:44px;
+      height:44px;
+      border-radius:12px;
+      background:linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+      border:1px solid rgba(255,255,255,0.1);
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      transition:all 300ms cubic-bezier(.34,.46,.45,.94);
+      margin-right:20px;
+    }
+
+    .back-btn:hover{
+      background:linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.08));
+      transform:translateX(-4px);
+    }
+
+    body.transitioning{
+      animation:page-exit 600ms cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
+    }
+
+    @keyframes page-exit{
+      to{opacity:0; transform:scale(1.02)}
+    }
+
+    .hidden{display:none !important}
+
+    /* Payment Information Styles */
+    .payment-info-section {
+      margin-top: 24px;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(120,220,255,0.15), rgba(180,120,255,0.1));
+      border: 1px solid rgba(120,220,255,0.3);
+      border-radius: 16px;
+    }
+
+    .payment-info-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .payment-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .payment-detail {
+      text-align: center;
+      padding: 12px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .payment-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .payment-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .advance-amount {
+      color: #6bff9e;
+    }
+
+    .balance-amount {
+      color: #ffba08;
+    }
+
+    .payment-method {
+      color: #71e0ff;
+    }
+
+    .payment-status {
+      color: #b47bff;
+    }
+
+    .balance-section {
+      margin-top: 16px;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(255,180,120,0.2), rgba(255,120,180,0.2));
+      border: 1px solid rgba(255,180,120,0.3);
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .balance-label {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .balance-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffba08;
+    }
+
+    .paid-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      background: linear-gradient(135deg, rgba(100,255,150,0.3), rgba(63,230,167,0.2));
+      border: 1px solid rgba(100,255,150,0.4);
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #6bff9e;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .advance-management-section {
+      margin-top: 16px;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(100,255,150,0.15), rgba(63,230,167,0.1));
+      border: 1px solid rgba(100,255,150,0.3);
+      border-radius: 12px;
+    }
+
+    .advance-management-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .advance-input-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .advance-input {
+      flex: 1;
+      height: 44px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border: 1.5px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 0 16px;
+      font-size: 14px;
+      color: var(--text);
+      font-family: inherit;
+      transition: all 300ms ease;
+    }
+
+    .advance-input:focus {
+      outline: none;
+      border-color: rgba(100,255,150,0.5);
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.04));
+      box-shadow: 0 0 0 4px rgba(100,255,150,0.1);
+    }
+
+    .advance-btn {
+      height: 44px;
+      padding: 0 20px;
+      border-radius: 10px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 300ms ease;
+      background: linear-gradient(135deg, rgba(100,255,150,0.3), rgba(63,230,167,0.3));
+      border: 1px solid rgba(100,255,150,0.4);
+      color: var(--text);
+    }
+
+    .advance-btn:hover {
+      background: linear-gradient(135deg, rgba(100,255,150,0.4), rgba(63,230,167,0.4));
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(100,255,150,0.3);
+    }
+
+    .advance-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .advance-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .advance-history {
+      margin-top: 16px;
+      padding: 12px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .advance-history-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .advance-history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 11px;
+    }
+
+    .advance-history-item:last-child {
+      border-bottom: none;
+    }
+
+    .advance-history-amount {
+      font-weight: 600;
+      color: #6bff9e;
+    }
+
+    .advance-history-date {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    /* Editable Amount Styles */
+    .editable-amount {
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .editable-amount:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .amount-input {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 4px;
+      color: var(--text);
+      font-size: inherit;
+      font-weight: inherit;
+      padding: 2px 6px;
+      width: 100px;
+      text-align: center;
+    }
+
+    .amount-input:focus {
+      outline: none;
+      border-color: rgba(120,220,255,0.5);
+      box-shadow: 0 0 0 2px rgba(120,220,255,0.2);
+    }
+
+    .full-paid-btn {
+      background: linear-gradient(135deg, rgba(100,255,150,0.3), rgba(63,230,167,0.3));
+      border: 1px solid rgba(100,255,150,0.4);
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 300ms;
+      font-size: 12px;
+      margin-top: 8px;
+      width: 100%;
+    }
+
+    .full-paid-btn:hover {
+      background: linear-gradient(135deg, rgba(100,255,150,0.4), rgba(63,230,167,0.4));
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(100,255,150,0.3);
+    }
+
+    .full-paid-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Print Bill Button */
+    .print-bill-btn {
+      background: linear-gradient(135deg, rgba(180,120,255,0.3), rgba(255,120,180,0.3));
+      border: 1px solid rgba(180,120,255,0.4);
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 300ms;
+      font-size: 12px;
+      margin-top: 8px;
+      width: 100%;
+    }
+
+    .print-bill-btn:hover {
+      background: linear-gradient(135deg, rgba(180,120,255,0.4), rgba(255,120,180,0.4));
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(180,120,255,0.3);
+    }
+
+    @media (max-width:1024px){
+      .container{
+        grid-template-columns:1fr;
+      }
+      .priority-sidebar{
+        position:relative;
+        top:0;
+        margin-top:0;
+      }
+      .n-logo-bg {
+        font-size: 40vw;
+      }
+    }
+
+    @media (max-width:640px){
+      .header{
+        padding:0 20px;
+      }
+      .logo{
+        position:static;
+        transform:none;
+      }
+      .container{
+        padding:20px 16px;
+      }
+      .glass-card{
+        padding:24px 20px;
+      }
+      .action-buttons{
+        flex-direction:column;
+      }
+      .btn-group{
+        flex-direction:column;
+      }
+      .btn{
+        width:100%;
+      }
+      .size-table th, .size-table td{
+        padding:8px;
+        font-size:12px;
+      }
+      .header {
+        justify-content: space-between;
+      }
+      .language-switch {
+        gap: 5px;
+      }
+      .language-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+      .item-header-actions{
+        flex-direction:column;
+      }
+      .payment-details {
+        grid-template-columns: 1fr;
+      }
+      .advance-input-group {
+        flex-direction: column;
+      }
+      .advance-actions {
+        flex-direction: column;
+      }
+      .bill-header {
+        flex-direction: column;
+        gap: 16px;
+      }
+      .bill-info-right {
+        text-align: left;
+      }
+      .n-logo-bg {
+        font-size: 50vw;
+        opacity: 0.8; /* Increased opacity for mobile */
+      }
+    }
+
+    /* Print Styles for Bill */
+    @media print {
+      body * {
+        visibility: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      title {
+    display: none !important;
+  }
+  
+  /* Override browser's default header */
+  @page {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+      
+      #printable-bill, #printable-bill * {
+        visibility: visible !important;
+      }
+      
+      #printable-bill {
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: white !important;
+        color: black !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        z-index: 9999 !important;
+        overflow: visible !important;
+      }
+      
+      .print-page {
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 !important;
+        padding: 20px !important;
+        page-break-after: always !important;
+        box-sizing: border-box !important;
+      }
+      
+      .print-page:last-child {
+        page-break-after: avoid !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="n-logo-bg">N</div>
+  
+  <header class="header">
+    <button class="back-btn" id="backBtn" aria-label="Back">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+    </button>
+    <div class="logo" data-english="NISHANTH TAILORS" data-tamil="நிஷாந்த் டெய்லர்ஸ்">NISHANTH TAILORS</div>
+    <div class="language-switch">
+      <button class="language-btn active" id="englishBtn">English</button>
+      <button class="language-btn" id="tamilBtn">தமிழ்</button>
+    </div>
+    <button class="menu-btn" id="menuBtn" aria-label="Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="5" r="1.5" fill="currentColor"/>
+        <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+        <circle cx="12" cy="19" r="1.5" fill="currentColor"/>
+      </svg>
+    </button>
+    <div class="menu-dropdown" id="menuDropdown">
+      <div class="menu-item" id="finishedOrdersBtn" data-english="Finished Orders" data-tamil="முடிந்த ஆர்டர்கள்">Finished Orders</div>
+      <div class="menu-item" id="deliveredOrdersBtn" data-english="Delivered Orders" data-tamil="டெலிவர் ஆர்டர்கள்">Delivered Orders</div>
+      <div class="menu-item" id="cancelledOrdersBtn" data-english="Cancelled Orders" data-tamil="ரத்து ஆர்டர்கள்">Cancelled Orders</div>
+      <div class="menu-item" id="notPaidOrdersBtn" data-english="Not Paid Orders" data-tamil="செலுத்தப்படாத ஆர்டர்கள்">Not Paid Orders</div>
+    </div>
+  </header>
+  
+  <div class="container">
+    <div class="main-content">
+      <div class="glass-card">
+        <div class="search-section" id="searchSection">
+          <div class="input-group">
+            
+            <!-- Animated Search Bar -->
+            <div class="search-container">
+              <div id="poda">
+                <div class="glow"></div>
+                <div class="darkBorderBg"></div>
+                <div class="darkBorderBg"></div>
+                <div class="darkBorderBg"></div>
+                <div class="white"></div>
+                <div class="border"></div>
+                
+                <div id="main">
+                  <input placeholder="Enter bill number or customer name..." type="text" name="text" class="search-input" id="billSearch" />
+                  <div id="input-mask"></div>
+                  <div id="pink-mask"></div>
+                  
+                  <div id="search-icon">
+                    <svg
+                      xmlns="http://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"
+                      width="24"
+                      viewBox="0 0 24 24"
+                      stroke-width="2"
+                      stroke-linejoin="round"
+                      stroke-linecap="round"
+                      height="24"
+                      fill="none"
+                      class="feather feather-search"
+                    >
+                      <circle stroke="url(#search)" r="8" cy="11" cx="11"></circle>
+                      <line
+                        stroke="url(#searchl)"
+                        y2="16.65"
+                        y1="22"
+                        x2="16.65"
+                        x1="22"
+                      ></line>
+                      <defs>
+                        <linearGradient gradientTransform="rotate(50)" id="search">
+                          <stop stop-color="#f8e7f8" offset="0%"></stop>
+                          <stop stop-color="#b6a9b7" offset="50%"></stop>
+                        </linearGradient>
+                        <linearGradient id="searchl">
+                          <stop stop-color="#b6a9b7" offset="0%"></stop>
+                          <stop stop-color="#837484" offset="50%"></stop>
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="suggestions-dropdown" id="suggestionsDropdown"></div>
+            </div>
+          </div>
+          
+          <div class="btn-group">
+            <button class="btn btn-primary" id="searchBtn" data-english="Search" data-tamil="தேடு">Search</button>
+            <button class="btn btn-primary" id="createBillBtn" data-english="Create New Bill" data-tamil="புதிய பில் உருவாக்க">Create New Bill</button>
+          </div>
+
+          <!-- Updated Bill Details Layout -->
+          <div class="bill-details" id="billDetails">
+            <!-- Bill Header -->
+            <div class="bill-header">
+              <div class="bill-info-left">
+                <div class="bill-number" id="detailBillNo">-</div>
+                <div class="bill-customer-name" id="detailName">-</div>
+                <div class="bill-mobile" id="detailMobile">-</div>
+              </div>
+              <div class="bill-info-right">
+                <div class="bill-status" id="detailStatus">-</div>
+                <div class="bill-dates">
+                  <div><span data-english="Billing Date" data-tamil="பில் தேதி">Billing Date</span>: <span id="detailBillingDate">-</span></div>
+                  <div><span data-english="Deadline" data-tamil="காலக்கெடு">Deadline</span>: <span id="detailDeadline">-</span></div>
+                  <div><span data-english="Created" data-tamil="உருவாக்கப்பட்டது">Created</span>: <span id="detailCreatedTime">-</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bill Content -->
+            <div class="bill-content">
+              <!-- Order Details Section -->
+              <div class="bill-section">
+                <div class="section-title">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14,2 14,8 20,8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10,9 9,9 8,9"></polyline>
+                  </svg>
+                  <span data-english="Order Details" data-tamil="ஆர்டர் விவரங்கள்">Order Details</span>
+                </div>
+                <div class="detail-grid">
+                  <div class="detail-item">
+                    <div class="detail-label" data-english="Bill Number" data-tamil="பில் எண்">Bill Number</div>
+                    <div class="detail-value" id="detailBillNo2">-</div>
+                  </div>
+                  <div class="detail-item">
+                    <div class="detail-label" data-english="Customer Name" data-tamil="வாடிக்கையாளர் பெயர்">Customer Name</div>
+                    <div class="detail-value" id="detailName2">-</div>
+                  </div>
+                  <div class="detail-item">
+                    <div class="detail-label" data-english="Mobile Number" data-tamil="மொபைல் எண்">Mobile Number</div>
+                    <div class="detail-value" id="detailMobile2">-</div>
+                  </div>
+                  <div class="detail-item">
+                    <div class="detail-label" data-english="Billing Date" data-tamil="பில் தேதி">Billing Date</div>
+                    <div class="detail-value" id="detailBillingDate2">-</div>
+                  </div>
+                  <div class="detail-item">
+                    <div class="detail-label" data-english="Created Time" data-tamil="உருவாக்கப்பட்ட நேரம்">Created Time</div>
+                    <div class="detail-value" id="detailCreatedTime2">-</div>
+                  </div>
+                  <div class="detail-item">
+                    <div class="detail-label" data-english="Deadline" data-tamil="காலக்கெடு">Deadline</div>
+                    <div class="detail-value" id="detailDeadline2">-</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Payment Summary Section -->
+              <div class="bill-section">
+                <div class="section-title">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                    <line x1="1" y1="10" x2="23" y2="10"></line>
+                  </svg>
+                  <span data-english="Payment Summary" data-tamil="கட்டண சுருக்கம்">Payment Summary</span>
+                </div>
+                <div class="payment-summary">
+                  <div class="payment-row">
+                    <div class="payment-label" data-english="Total Amount" data-tamil="மொத்த தொகை">Total Amount</div>
+                    <div class="payment-amount total-amount" id="detailTotalAmount">₹0</div>
+                  </div>
+                  <div class="payment-row">
+                    <div class="payment-label" data-english="Advance Paid" data-tamil="செலுத்தப்பட்ட முன்பணம்">Advance Paid</div>
+                    <div class="payment-amount advance-amount editable-amount" id="detailAdvanceAmount">₹0</div>
+                  </div>
+                  <div class="payment-row">
+                    <div class="payment-label" data-english="Balance Amount" data-tamil="இருப்புத் தொகை">Balance Amount</div>
+                    <div class="payment-amount balance-amount" id="detailBalanceAmount">₹0</div>
+                  </div>
+                  <div class="payment-row">
+                    <div class="payment-label" data-english="Payment Method" data-tamil="கட்டண முறை">Payment Method</div>
+                    <div class="payment-amount" id="detailPaymentMethod">-</div>
+                  </div>
+                  <div class="payment-row">
+                    <div class="payment-label" data-english="Payment Status" data-tamil="கட்டண நிலை">Payment Status</div>
+                    <div class="payment-status-badge" id="detailPaymentStatus">-</div>
+                  </div>
+                </div>
+                <button class="full-paid-btn" id="fullPaidBtn" data-english="Mark as Fully Paid" data-tamil="முழுமையாக செலுத்தப்பட்டதாக குறிக்கவும்">Mark as Fully Paid</button>
+                <button class="print-bill-btn" id="printBillBtn" data-english="Print Bill" data-tamil="பில் அச்சிடு" style="display:none;">Print Bill</button>
+              </div>
+            </div>
+
+            <!-- Items Section -->
+            <div class="items-section" id="itemsSection" style="display:none;">
+              <h3 class="section-title" data-english="Ordered Items" data-tamil="ஆர்டர் செய்யப்பட்ட பொருட்கள்">Ordered Items</h3>
+              <div id="itemsList"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="bill-footer">
+              <div class="action-buttons">
+                <button class="btn btn-danger" id="cancelBtn" data-english="Cancel" data-tamil="ரத்து செய்">Cancel</button>
+                <button class="btn btn-warning" id="payBtn" data-english="Pay" data-tamil="பணம் செலுத்த">Pay</button>
+                <button class="btn btn-success" id="deliveredBtn" data-english="Delivered" data-tamil="டெலிவர் செய்யப்பட்டது">Delivered</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="priority-sidebar">
+      <div class="priority-card">
+        <h3 class="priority-title" data-english="Priority Orders" data-tamil="முன்னுரிமை ஆர்டர்கள்">Priority Orders</h3>
+        <div id="priorityList">
+          <div class="loading" data-english="Loading..." data-tamil="லோடிங்...">Loading...</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Cancel Modal -->
+  <div class="modal" id="cancelModal">
+    <div class="modal-content">
+      <h2 class="modal-title" data-english="Cancel Bill?" data-tamil="பில் ரத்து செய்யவா?">Cancel Bill?</h2>
+      <p class="modal-text" data-english="Are you sure you want to cancel this bill? This action cannot be undone." data-tamil="இந்த பில்லை ரத்து செய்ய விரும்புகிறீர்களா? இந்த செயலை திரும்ப பெற முடியாது.">Are you sure you want to cancel this bill? This action cannot be undone.</p>
+      <div class="modal-buttons">
+        <button class="btn btn-primary" id="cancelNoBtn" data-english="No" data-tamil="இல்லை">No</button>
+        <button class="btn btn-danger" id="cancelYesBtn" data-english="Yes, Cancel" data-tamil="ஆம், ரத்து செய்">Yes, Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+  <div class="modal" id="paymentModal">
+    <div class="modal-content">
+      <h2 class="modal-title" data-english="Payment" data-tamil="கட்டணம்">Payment</h2>
+      <p class="modal-text" data-english="Scan QR code or pay to the number below" data-tamil="QR கோடை ஸ்கேன் செய்யவும் அல்லது கீழே உள்ள எண்ணிற்கு பணம் செலுத்தவும்">Scan QR code or pay to the number below</p>
+      <img src="qrcode.png" alt="QR Code" class="qr-image" id="qrImage">
+      <div class="mobile-number" id="paymentMobile">9788128083</div>
+      <button class="btn btn-primary" id="closePaymentBtn" data-english="Close" data-tamil="மூடு">Close</button>
+    </div>
+  </div>
+
+  <!-- Delivered Modal -->
+  <div class="modal" id="deliveredModal">
+    <div class="modal-content">
+      <h2 class="modal-title" data-english="Mark as Delivered?" data-tamil="டெலிவர் செய்யப்பட்டதாக குறிக்கவா?">Mark as Delivered?</h2>
+      <p class="modal-text" data-english="Confirm that this order has been delivered to the customer." data-tamil="இந்த ஆர்டர் வாடிக்கையாளருக்கு டெலிவர் செய்யப்பட்டதை உறுதிப்படுத்தவும்.">Confirm that this order has been delivered to the customer.</p>
+      <div class="modal-buttons">
+        <button class="btn btn-primary" id="deliveredNoBtn" data-english="Cancel" data-tamil="ரத்து செய்">Cancel</button>
+        <button class="btn btn-success" id="deliveredYesBtn" data-english="Confirm Delivered" data-tamil="டெலிவர் செய்யப்பட்டதை உறுதிப்படுத்து">Confirm Delivered</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thank You Modal -->
+  <div class="modal" id="thankYouModal">
+    <div class="modal-content">
+      <h2 class="modal-title">✨ <span data-english="Order Delivered!" data-tamil="ஆர்டர் டெலிவர் செய்யப்பட்டது!">Order Delivered!</span></h2>
+      <p class="modal-text" style="font-size:20px; margin:32px 0;">
+        <span data-english="Thank you for choosing" data-tamil="தேர்ந்தெடுத்ததற்கு நன்றி">Thank you for choosing</span><br>
+        <strong style="background:linear-gradient(135deg, #71e0ff, #b47bff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;" data-english="Nishanth Tailors" data-tamil="நிஷாந்த் டெய்லர்ஸ்">Nishanth Tailors</strong>
+      </p>
+      <button class="btn btn-primary" id="backToWorkspaceBtn" data-english="Back to Workspace" data-tamil="பணியிடத்திற்கு திரும்பு">Back to Workspace</button>
+    </div>
+  </div>
+
+  <!-- Size Details Modal -->
+  <div class="modal" id="sizeDetailsModal">
+    <div class="modal-content">
+      <h2 class="modal-title" id="sizeDetailsTitle" data-english="Item Sizes" data-tamil="பொருள் அளவுகள்">Item Sizes</h2>
+      <div class="size-table-container">
+        <table class="size-table" id="sizeDetailsTable">
+          <thead>
+            <tr>
+              <th data-english="Measurement" data-tamil="அளவீடு">Measurement</th>
+              <th data-english="Value" data-tamil="மதிப்பு">Value</th>
+            </tr>
+          </thead>
+          <tbody id="sizeDetailsBody">
+          </tbody>
+        </table>
+      </div>
+      <button class="btn btn-primary" id="closeSizeDetailsBtn" style="width:100%; margin-top:20px;" data-english="Close" data-tamil="மூடு">Close</button>
+    </div>
+  </div>
+
+  <!-- Hidden Printable Bill -->
+  <div id="printable-bill" style="display:none;"></div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getFirestore, collection, query, where, getDocs, doc, updateDoc, orderBy, limit, Timestamp, arrayUnion } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDBW-WpSJIFT4ndQ87rbQ0UGXWBO6cYSF0",
+      authDomain: "daddy-3-f04d0.firebaseapp.com",
+      projectId: "daddy-3-f04d0",
+      storageBucket: "daddy-3-f04d0.firebasestorage.app",
+      messagingSenderId: "700872095381",
+      appId: "1:700872095381:web:6682b09fa7103e11d00d9c",
+      measurementId: "G-2NJHM6SCCC"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let currentBill = null;
+    let currentBillId = null;
+    let allBills = [];
+    let currentLanguage = 'english';
+
+    document.getElementById('englishBtn').addEventListener('click', () => {
+      switchLanguage('english');
+    });
+
+    document.getElementById('tamilBtn').addEventListener('click', () => {
+      switchLanguage('tamil');
+    });
+
+    // --- Language Preference Logic ---
+    function switchLanguage(lang) {
+      currentLanguage = lang;
+      localStorage.setItem('preferredLanguage', lang); // Save preference
+
+      document.getElementById('englishBtn').classList.toggle('active', lang === 'english');
+      document.getElementById('tamilBtn').classList.toggle('active', lang === 'tamil');
+
+      document.querySelectorAll('[data-english]').forEach(element => {
+        element.textContent = lang === 'english'
+          ? element.getAttribute('data-english')
+          : element.getAttribute('data-tamil');
+      });
+
+      document.getElementById('billSearch').placeholder = lang === 'english'
+        ? 'Enter bill number or customer name...'
+        : 'பில் எண் அல்லது வாடிக்கையாளர் பெயரை உள்ளிடவும்...';
+
+      // Update modal table headers
+      document.querySelectorAll('#sizeDetailsTable th').forEach(header => {
+        header.textContent = lang === 'english'
+          ? header.getAttribute('data-english')
+          : header.getAttribute('data-tamil');
+      });
+
+      // Update modal title if open
+      const sizeModal = document.getElementById('sizeDetailsModal');
+      if (sizeModal.classList.contains('active') && currentBill && currentBill.items) {
+        const item = currentBill.items[0];
+        const typeNames = {
+          shirt: { english: 'Shirt', tamil: 'சட்டை' },
+          fant: { english: 'Fant', tamil: 'பேண்ட்' },
+          trouser: { english: 'Trouser', tamil: 'டிரௌசர்' },
+          court: { english: 'Court', tamil: 'கோர்ட்' }
+        };
+        const title = document.getElementById('sizeDetailsTitle');
+        if (item && typeNames[item.type]) {
+          title.textContent = lang === 'english'
+            ? `${typeNames[item.type].english} Sizes`
+            : `${typeNames[item.type].tamil} அளவுகள்`;
+        }
+      }
+
+      // Update items and priority orders
+      if(currentBill && currentBill.items) {
+        displayItems(currentBill.items);
+      }
+      loadPriorityOrders();
+    }
+
+    document.getElementById('englishBtn').addEventListener('click', () => switchLanguage('english'));
+    document.getElementById('tamilBtn').addEventListener('click', () => switchLanguage('tamil'));
+
+    // Load preferred language from localStorage on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedLang = localStorage.getItem('preferredLanguage');
+      switchLanguage(savedLang === 'tamil' ? 'tamil' : 'english');
+    });
+
+    const sizeTemplates = {
+      shirt: [
+        { label: { english: 'Length (Neelam)', tamil: 'நீளம் (நீளம்)' }, field: 'length' },
+        { label: { english: 'Shoulder', tamil: 'தோள்' }, field: 'shoulder' },
+        { label: { english: 'Full Hand Neelam', tamil: 'முழு கை நீளம்' }, field: 'fullHandNeelam' },
+        { label: { english: 'Half Hand Neelam', tamil: 'அரை கை நீளம்' }, field: 'halfHandNeelam' },
+        { label: { english: 'Body Size', tamil: 'உடல் அளவு' }, field: 'bodySize' },
+        { label: { english: 'Stomach', tamil: 'வயிறு' }, field: 'stomach' },
+        { label: { english: 'Collar', tamil: 'காலர்' }, field: 'collar' },
+        { label: { english: 'Cup', tamil: 'கப்' }, field: 'cup' },
+        { label: { english: 'Muttu Loose', tamil: 'முட்டு தளர்வு' }, field: 'muttuLoose' },
+        { label: { english: 'Half Kai Loose', tamil: 'அரை கை தளர்வு' }, field: 'halfKaiLoose' },
+        { label: { english: 'Keela', tamil: 'கீழை' }, field: 'keela', type: 'select', options: [
+          { english: 'Round', tamil: 'வட்டம்' },
+          { english: 'Straight', tamil: 'நேராக' }
+        ]}
+      ],
+      fant: [
+        { label: { english: 'Hip (Iduppu)', tamil: 'இடுப்பு (இடுப்பு)' }, field: 'hip' },
+        { label: { english: 'Length (Neelam)', tamil: 'நீளம் (நீளம்)' }, field: 'length' },
+        { label: { english: 'Seetu (Backside)', tamil: 'சீட்டு (பின்புறம்)' }, field: 'seetu' },
+        { label: { english: 'Thoda', tamil: 'தொடை' }, field: 'thoda' },
+        { label: { english: 'Mutti Loose', tamil: 'முட்டி தளர்வு' }, field: 'muttiLoose' },
+        { label: { english: 'Bottom', tamil: 'அடிப்பகுதி' }, field: 'bottom' },
+        { label: { english: 'Inside', tamil: 'உள்ளே' }, field: 'inside' }
+      ],
+      trouser: [
+        { label: { english: 'Hip (Iduppu)', tamil: 'இடுப்பு (இடுப்பு)' }, field: 'hip' },
+        { label: { english: 'Length (Neelam)', tamil: 'நீளம் (நீளம்)' }, field: 'length' },
+        { label: { english: 'Thoda Loose', tamil: 'தொடை தளர்வு' }, field: 'thodaLoose' },
+        { label: { english: 'Seetu (Backside)', tamil: 'சீட்டு (பின்புறம்)' }, field: 'seetu' }
+      ],
+      court: [
+        { label: { english: 'Length (Neelam)', tamil: 'நீளம் (நீளம்)' }, field: 'length' },
+        { label: { english: 'Shoulder', tamil: 'தோள்' }, field: 'shoulder' },
+        { label: { english: 'Body Loose', tamil: 'உடல் தளர்வு' }, field: 'bodyLoose' },
+        { label: { english: 'Stomach Loose', tamil: 'வயிறு தளர்வு' }, field: 'stomachLoose' },
+        { label: { english: 'Collar', tamil: 'காலர்' }, field: 'collar' }
+      ]
+    };
+
+    async function loadAllBills() {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'bills'));
+        allBills = [];
+        querySnapshot.forEach((doc) => {
+          const billData = doc.data();
+          allBills.push({
+            id: doc.id,
+            ...billData
+          });
+        });
+      } catch (error) {
+        console.error('Error loading bills:', error);
+      }
+    }
+
+    document.getElementById('menuBtn').addEventListener('click', () => {
+      document.getElementById('menuDropdown').classList.toggle('active');
+    });
+
+    document.addEventListener('click', (e) => {
+      if(!e.target.closest('.menu-btn') && !e.target.closest('.menu-dropdown')){
+        document.getElementById('menuDropdown').classList.remove('active');
+      }
+    });
+
+    document.getElementById('backBtn').addEventListener('click', () => {
+      document.body.classList.add('transitioning');
+      setTimeout(() => window.location.href = 'index.html', 600);
+    });
+
+    document.getElementById('billSearch').addEventListener('input', (e) => {
+      const searchTerm = e.target.value.trim();
+      const dropdown = document.getElementById('suggestionsDropdown');
+      
+      if (searchTerm.length === 0) {
+        dropdown.classList.remove('active');
+        return;
+      }
+
+      const filteredBills = allBills.filter(bill => {
+        const billNoMatch = bill.billNo && bill.billNo.toUpperCase().includes(searchTerm.toUpperCase());
+        const nameMatch = bill.customerName && bill.customerName.toLowerCase().includes(searchTerm.toLowerCase());
+        return billNoMatch || nameMatch;
+      }).slice(0, 8);
+
+      if (filteredBills.length === 0) {
+        dropdown.classList.remove('active');
+        return;
+      }
+
+      dropdown.innerHTML = filteredBills.map(bill => `
+        <div class="suggestion-item" data-billno="${bill.billNo}" data-billid="${bill.id}">
+          <div class="suggestion-bill">${bill.billNo}</div>
+          <div class="suggestion-name">${bill.customerName || (currentLanguage === 'english' ? 'Unknown Customer' : 'அறியப்படாத வாடிக்கையாளர்')}</div>
+          <div class="suggestion-mobile">${bill.mobileNo || (currentLanguage === 'english' ? 'No mobile' : 'மொபைல் இல்லை')}</div>
+        </div>
+      `).join('');
+
+      dropdown.classList.add('active');
+
+      dropdown.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const billNo = item.getAttribute('data-billno');
+          const billId = item.getAttribute('data-billid');
+          document.getElementById('billSearch').value = billNo;
+          dropdown.classList.remove('active');
+          searchBillById(billId);
+        });
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.search-container')) {
+        document.getElementById('suggestionsDropdown').classList.remove('active');
+      }
+    });
+
+    document.getElementById('searchBtn').addEventListener('click', enhancedSearch);
+    document.getElementById('billSearch').addEventListener('keypress', (e) => {
+      if(e.key === 'Enter') enhancedSearch();
+    });
+
+    async function enhancedSearch() {
+      const searchTerm = document.getElementById('billSearch').value.trim();
+      if(!searchTerm){
+        alert(currentLanguage === 'english' ? 'Please enter a bill number or customer name' : 'பில் எண் அல்லது வாடிக்கையாளர் பெயரை உள்ளிடவும்');
+        return;
+      }
+
+      try {
+        const billQuery = query(collection(db, 'bills'), where('billNo', '==', searchTerm.toUpperCase()));
+        const billSnapshot = await getDocs(billQuery);
+        
+        if(!billSnapshot.empty){
+          billSnapshot.forEach((doc) => {
+            currentBillId = doc.id;
+            currentBill = doc.data();
+            displayBillDetails(currentBill);
+          });
+          document.getElementById('searchSection').classList.add('has-results');
+          return;
+        }
+
+        const nameQuery = query(collection(db, 'bills'));
+        const nameSnapshot = await getDocs(nameQuery);
+        
+        const matchingBills = [];
+        nameSnapshot.forEach((doc) => {
+          const billData = doc.data();
+          if(billData.customerName && billData.customerName.toLowerCase().includes(searchTerm.toLowerCase())){
+            matchingBills.push({
+              id: doc.id,
+              ...billData
+            });
+          }
+        });
+
+        if(matchingBills.length === 0){
+          alert(currentLanguage === 'english' ? 'No bills found matching your search!' : 'உங்கள் தேடலுக்கு பொருந்தும் பில்கள் எதுவும் இல்லை!');
+          document.getElementById('billDetails').classList.remove('active');
+          document.getElementById('searchSection').classList.remove('has-results');
+          return;
+        }
+
+        if(matchingBills.length === 1){
+          currentBillId = matchingBills[0].id;
+          currentBill = matchingBills[0];
+          displayBillDetails(currentBill);
+          document.getElementById('searchSection').classList.add('has-results');
+        } else {
+          const dropdown = document.getElementById('suggestionsDropdown');
+          dropdown.innerHTML = matchingBills.map(bill => `
+            <div class="suggestion-item" data-billno="${bill.billNo}" data-billid="${bill.id}">
+              <div class="suggestion-bill">${bill.billNo}</div>
+              <div class="suggestion-name">${bill.customerName || (currentLanguage === 'english' ? 'Unknown Customer' : 'அறியப்படாத வாடிக்கையாளர்')}</div>
+              <div class="suggestion-mobile">${bill.mobileNo || (currentLanguage === 'english' ? 'No mobile' : 'மொபைல் இல்லை')}</div>
+            </div>
+          `).join('');
+          dropdown.classList.add('active');
+        }
+
+      } catch (error) {
+        console.error('Error searching bills:', error);
+        alert(currentLanguage === 'english' ? 'Error searching bills. Please try again.' : 'பில்களை தேடும் போது பிழை. மீண்டும் முயற்சிக்கவும்.');
+      }
+    }
+
+    async function searchBillById(billId) {
+      try {
+        const q = query(collection(db, 'bills'), where('__name__', '==', billId));
+        const querySnapshot = await getDocs(q);
+        
+        if(querySnapshot.empty){
+          alert(currentLanguage === 'english' ? 'Bill not found!' : 'பில் கிடைக்கவில்லை!');
+          return;
+        }
+
+        querySnapshot.forEach((doc) => {
+          currentBillId = doc.id;
+          currentBill = doc.data();
+          displayBillDetails(currentBill);
+        });
+
+        document.getElementById('searchSection').classList.add('has-results');
+      } catch (error) {
+        console.error('Error searching bill by ID:', error);
+        alert(currentLanguage === 'english' ? 'Error searching bill. Please try again.' : 'பிலை தேடும் போது பிழை. மீண்டும் முயற்சிக்கவும்.');
+      }
+    }
+
+    function displayBillDetails(bill){
+      // Update bill header
+      document.getElementById('detailBillNo').textContent = bill.billNo;
+      document.getElementById('detailName').textContent = bill.customerName;
+      document.getElementById('detailMobile').textContent = bill.mobileNo;
+      document.getElementById('detailBillingDate').textContent = formatDate(bill.billingDate);
+      document.getElementById('detailCreatedTime').textContent = formatDateTime(bill.createdAt);
+      document.getElementById('detailDeadline').textContent = formatDate(bill.deadlineDate);
+      
+      // Update status with proper styling
+      const statusElement = document.getElementById('detailStatus');
+      const status = bill.status || 'Pending';
+      statusElement.textContent = getStatusText(status);
+      statusElement.className = 'bill-status';
+      statusElement.classList.add(`status-${status.toLowerCase()}`);
+      
+      // Update order details section
+      document.getElementById('detailBillNo2').textContent = bill.billNo;
+      document.getElementById('detailName2').textContent = bill.customerName;
+      document.getElementById('detailMobile2').textContent = bill.mobileNo;
+      document.getElementById('detailBillingDate2').textContent = formatDate(bill.billingDate);
+      document.getElementById('detailCreatedTime2').textContent = formatDateTime(bill.createdAt);
+      document.getElementById('detailDeadline2').textContent = formatDate(bill.deadlineDate);
+      
+      // Update payment summary
+      const totalAmount = bill.totalAmount || 0;
+      const advanceAmount = bill.advanceAmount || 0;
+      const balanceAmount = totalAmount - advanceAmount;
+      
+      document.getElementById('detailTotalAmount').textContent = `₹${totalAmount}`;
+      document.getElementById('detailAdvanceAmount').textContent = `₹${advanceAmount}`;
+      document.getElementById('detailBalanceAmount').textContent = `₹${balanceAmount}`;
+      document.getElementById('detailPaymentMethod').textContent = bill.paymentMethod || 'Cash';
+      
+      // Update payment status with badge
+      const paymentStatusElement = document.getElementById('detailPaymentStatus');
+      const paymentStatus = balanceAmount === 0 ? 
+        (currentLanguage === 'english' ? 'Paid' : 'செலுத்தப்பட்டது') : 
+        (currentLanguage === 'english' ? 'Pending' : 'நிலுவையில்');
+      paymentStatusElement.textContent = paymentStatus;
+      paymentStatusElement.className = 'payment-status-badge';
+      paymentStatusElement.classList.add(balanceAmount === 0 ? 'status-paid' : 'status-pending');
+      
+      document.getElementById('billDetails').classList.add('active');
+
+      if(bill.items && bill.items.length > 0) {
+        displayItems(bill.items);
+        document.getElementById('itemsSection').style.display = 'block';
+      } else {
+        document.getElementById('itemsSection').style.display = 'none';
+      }
+
+      // Update button visibility
+      updateActionButtonsVisibility();
+      
+      // Show print button for delivered bills
+      const printBtn = document.getElementById('printBillBtn');
+      if (bill.status === 'Delivered') {
+        printBtn.style.display = 'block';
+      } else {
+        printBtn.style.display = 'none';
+      }
+      
+      // Add click event for editable amounts
+      setupEditableAmounts();
+    }
+
+    function setupEditableAmounts() {
+      const advanceAmountElement = document.getElementById('detailAdvanceAmount');
+      
+      // Remove existing event listeners
+      const newAdvanceElement = advanceAmountElement.cloneNode(true);
+      advanceAmountElement.parentNode.replaceChild(newAdvanceElement, advanceAmountElement);
+      
+      // Add click event for advance amount
+      newAdvanceElement.addEventListener('click', () => {
+        if (currentBill && currentBill.status !== 'Delivered' && currentBill.status !== 'Cancelled') {
+          editAdvanceAmount();
+        }
+      });
+    }
+
+    function editAdvanceAmount() {
+      const advanceAmountElement = document.getElementById('detailAdvanceAmount');
+      const currentAmount = parseInt(advanceAmountElement.textContent.replace('₹', ''));
+      
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.className = 'amount-input';
+      input.value = currentAmount;
+      input.min = 0;
+      input.max = currentBill.totalAmount || 0;
+      
+      advanceAmountElement.innerHTML = '';
+      advanceAmountElement.appendChild(input);
+      input.focus();
+      input.select();
+      
+      const saveAmount = () => {
+        const newAmount = parseInt(input.value) || 0;
+        const totalAmount = currentBill.totalAmount || 0;
+        
+        if (newAmount < 0) {
+          alert(currentLanguage === 'english' ? 'Amount cannot be negative' : 'தொகை எதிர்மறையாக இருக்க முடியாது');
+          return;
+        }
+        
+        if (newAmount > totalAmount) {
+          alert(currentLanguage === 'english' ? 'Advance cannot exceed total amount' : 'முன்பணம் மொத்த தொகையை விட அதிகமாக இருக்க முடியாது');
+          return;
+        }
+        
+        updateAdvanceAmount(newAmount);
+      };
+      
+      input.addEventListener('blur', saveAmount);
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          saveAmount();
+        }
+      });
+    }
+
+    async function updateAdvanceAmount(newAmount) {
+      if (!currentBillId) return;
+      
+      try {
+        await updateDoc(doc(db, 'bills', currentBillId), {
+          advanceAmount: newAmount
+        });
+        
+        // Update local bill data
+        currentBill.advanceAmount = newAmount;
+        
+        // Update UI
+        const totalAmount = currentBill.totalAmount || 0;
+        const balanceAmount = totalAmount - newAmount;
+        
+        document.getElementById('detailAdvanceAmount').textContent = `₹${newAmount}`;
+        document.getElementById('detailBalanceAmount').textContent = `₹${balanceAmount}`;
+        
+        // Update payment status
+        const paymentStatusElement = document.getElementById('detailPaymentStatus');
+        const paymentStatus = balanceAmount === 0 ? 
+          (currentLanguage === 'english' ? 'Paid' : 'செலுத்தப்பட்டது') : 
+          (currentLanguage === 'english' ? 'Pending' : 'நிலுவையில்');
+        paymentStatusElement.textContent = paymentStatus;
+        paymentStatusElement.className = 'payment-status-badge';
+        paymentStatusElement.classList.add(balanceAmount === 0 ? 'status-paid' : 'status-pending');
+        
+        // Update button visibility
+        updateActionButtonsVisibility();
+        
+        // Reload priority orders to update payment status
+        loadPriorityOrders();
+        
+      } catch (error) {
+        console.error('Error updating advance amount:', error);
+        alert(currentLanguage === 'english' ? 'Error updating amount. Please try again.' : 'தொகையை புதுப்பிக்கும் போது பிழை. மீண்டும் முயற்சிக்கவும்.');
+      }
+    }
+
+    function getStatusText(status) {
+      const statusMap = {
+        'Pending': { english: 'Pending', tamil: 'நிலுவையில்' },
+        'Cancelled': { english: 'Cancelled', tamil: 'ரத்து செய்யப்பட்டது' },
+        'Delivered': { english: 'Delivered', tamil: 'டெலிவர் செய்யப்பட்டது' },
+        'Finished': { english: 'Finished', tamil: 'முடிந்தது' }
+      };
+      return statusMap[status] ? statusMap[status][currentLanguage] : status;
+    }
+
+    function displayItems(items) {
+      const itemsList = document.getElementById('itemsList');
+      let itemsHTML = '';
+      let totalAmount = 0;
+
+      const countText = currentLanguage === 'english' ? 'Count' : 'எண்ணிக்கை';
+      const priceText = currentLanguage === 'english' ? 'Price per item' : 'ஒரு பொருளின் விலை';
+      const subtotalText = currentLanguage === 'english' ? 'Subtotal' : 'துணைத்தொகை';
+      const viewSizesText = currentLanguage === 'english' ? 'View Sizes' : 'அளவுகளை காண்க';
+      const markReadyText = currentLanguage === 'english' ? 'Mark Ready' : 'தயார் குறி';
+      const readyText = currentLanguage === 'english' ? 'Ready' : 'தயார்';
+      const completedText = currentLanguage === 'english' ? 'Completed!' : 'முடிந்தது!';
+
+      // Check if all items are completed
+      const allItemsCompleted = items.every(item => (item.readyCount || 0) >= item.count);
+
+      items.forEach((item, index) => {
+        totalAmount += item.total || 0;
+        const readyCount = item.readyCount || 0;
+        const isCompleted = readyCount >= item.count;
+        
+        itemsHTML += `
+          <div class="item-card ${isCompleted ? 'completed' : ''}">
+            <div class="item-card-header">
+              <div class="item-card-title">${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</div>
+              <div class="item-header-actions">
+                <button class="btn-view" onclick="viewItemSizes(${index})">${viewSizesText}</button>
+                ${!isCompleted && currentBill.status !== 'Finished' && currentBill.status !== 'Delivered' && currentBill.status !== 'Cancelled' && !allItemsCompleted ? 
+                  `<button class="btn-ready" onclick="markItemReady(${index})">${markReadyText}</button>` : 
+                  ''}
+              </div>
+            </div>
+            <div class="item-info"><strong>${countText}:</strong> ${item.count}</div>
+            <div class="item-info"><strong>${priceText}:</strong> ₹${item.price}</div>
+            <div class="item-info"><strong>${subtotalText}:</strong> ₹${item.total}</div>
+            ${readyCount > 0 ? 
+              `<div class="item-ready-count">${isCompleted ? '✓ ' + completedText : readyText + ': ' + readyCount + '/' + item.count}</div>` : 
+              ''}
+          </div>
+        `;
+      });
+
+      itemsList.innerHTML = itemsHTML;
+
+      // Update action buttons visibility after displaying items
+      updateActionButtonsVisibility();
+    }
+
+    window.markItemReady = async function(index) {
+      if(!currentBill || !currentBill.items || !currentBill.items[index] || !currentBillId) return;
+      
+      const item = currentBill.items[index];
+      const readyCount = item.readyCount || 0;
+      
+      if(readyCount >= item.count) {
+        alert(currentLanguage === 'english' ? 'All items already marked as ready!' : 'அனைத்து பொருட்களும் ஏற்கனவே தயாராக குறிக்கப்பட்டுள்ளன!');
+        return;
+      }
+      
+      try {
+        const updatedItems = [...currentBill.items];
+        const newReadyCount = readyCount + 1;
+        
+        if(!updatedItems[index].readyTimestamps) {
+          updatedItems[index].readyTimestamps = [];
+        }
+        
+        updatedItems[index].readyCount = newReadyCount;
+        updatedItems[index].readyTimestamps.push(Timestamp.now());
+        
+        const allItemsReady = updatedItems.every(itm => (itm.readyCount || 0) >= itm.count);
+        
+        const updateData = {
+          items: updatedItems
+        };
+        
+        if(allItemsReady) {
+          updateData.status = 'Finished';
+          updateData.finishedDate = Timestamp.now();
+        }
+        
+        await updateDoc(doc(db, 'bills', currentBillId), updateData);
+        
+        currentBill.items = updatedItems;
+        if(allItemsReady) {
+          currentBill.status = 'Finished';
+          currentBill.finishedDate = updateData.finishedDate;
+        }
+        
+        displayItems(updatedItems);
+        
+        // Update button visibility when all items are completed
+        updateActionButtonsVisibility();
+        
+        if(allItemsReady) {
+          // Update status in the UI
+          const statusElement = document.getElementById('detailStatus');
+          statusElement.textContent = getStatusText('Finished');
+          statusElement.className = 'bill-status status-finished';
+          alert(currentLanguage === 'english' ? 'All items completed! Order marked as Finished.' : 'அனைத்து பொருட்களும் முடிந்தன! ஆர்டர் முடிந்ததாக குறிக்கப்பட்டது.');
+        }
+        
+        loadPriorityOrders();
+        
+      } catch (error) {
+        console.error('Error marking item as ready:', error);
+        alert(currentLanguage === 'english' ? 'Error updating item status. Please try again.' : 'பொருள் நிலையை புதுப்பிக்கும் போது பிழை. மீண்டும் முயற்சிக்கவும்.');
+      }
+    };
+
+    // Find the function updateActionButtonsVisibility and update the delivered button visibility logic
+function updateActionButtonsVisibility() {
+  const cancelBtn = document.getElementById('cancelBtn');
+  const payBtn = document.getElementById('payBtn');
+  const deliveredBtn = document.getElementById('deliveredBtn');
+  const fullPaidBtn = document.getElementById('fullPaidBtn');
+  const printBillBtn = document.getElementById('printBillBtn');
+  
+  if (!currentBill) return;
+  
+  const isCancelled = currentBill.status === 'Cancelled';
+  const isDelivered = currentBill.status === 'Delivered';
+  const isFinished = currentBill.status === 'Finished';
+  
+  // Check if all items are completed (regardless of status)
+  const allItemsCompleted = currentBill.items && currentBill.items.every(item => 
+    (item.readyCount || 0) >= item.count
+  );
+  
+  // Check if payment is fully paid
+  const totalAmount = currentBill.totalAmount || 0;
+  const advanceAmount = currentBill.advanceAmount || 0;
+  const balanceAmount = totalAmount - advanceAmount;
+  const isFullyPaid = balanceAmount === 0;
+  
+  if (isCancelled || isDelivered) {
+    // Hide all buttons for cancelled or delivered bills except print for delivered
+    cancelBtn.style.display = 'none';
+    payBtn.style.display = 'none';
+    deliveredBtn.style.display = 'none';
+    fullPaidBtn.style.display = 'none';
+    if (isDelivered) {
+      printBillBtn.style.display = 'block';
+    }
+  } else if (isFinished || allItemsCompleted) {
+    // Show all buttons when items are completed, regardless of payment status
+    cancelBtn.style.display = 'none';
+    payBtn.style.display = 'flex';
+    deliveredBtn.style.display = 'flex'; // Always show delivered button
+    fullPaidBtn.style.display = 'flex';
+    printBillBtn.style.display = 'none';
+  } else {
+    // Show all buttons for pending orders with incomplete items
+    cancelBtn.style.display = 'flex';
+    payBtn.style.display = 'flex';
+    deliveredBtn.style.display = 'none'; // Hide until items are completed
+    fullPaidBtn.style.display = 'flex';
+    printBillBtn.style.display = 'none';
+  }
+  
+  // Update Full Paid button text based on payment status
+  if (isFullyPaid) {
+    fullPaidBtn.textContent = currentLanguage === 'english' ? 'Fully Paid' : 'முழுமையாக செலுத்தப்பட்டது';
+    fullPaidBtn.disabled = true;
+  } else {
+    fullPaidBtn.textContent = currentLanguage === 'english' ? 'Mark as Fully Paid' : 'முழுமையாக செலுத்தப்பட்டதாக குறிக்கவும்';
+    fullPaidBtn.disabled = false;
+  }
+}
+
+
+
+    window.viewItemSizes = function(index) {
+      if(!currentBill || !currentBill.items || !currentBill.items[index]) return;
+      
+      const item = currentBill.items[index];
+      const modal = document.getElementById('sizeDetailsModal');
+      const title = document.getElementById('sizeDetailsTitle');
+      const body = document.getElementById('sizeDetailsBody');
+      
+      const typeNames = {
+        shirt: { english: 'Shirt', tamil: 'சட்டை' },
+        fant: { english: 'Fant', tamil: 'பேண்ட்' },
+        trouser: { english: 'Trouser', tamil: 'டிரௌசர்' },
+        court: { english: 'Court', tamil: 'கோர்ட்' }
+      };
+      
+      if (currentLanguage === 'english') {
+        title.textContent = `${typeNames[item.type].english} Sizes`;
+      } else {
+        title.textContent = `${typeNames[item.type].tamil} அளவுகள்`;
+      }
+      
+      let tableHTML = '';
+      
+      if(item.sizes) {
+        const template = sizeTemplates[item.type];
+        
+        for(let [key, value] of Object.entries(item.sizes)) {
+          const fieldInfo = template.find(field => field.field === key);
+          let label;
+          
+          if (fieldInfo) {
+            label = currentLanguage === 'english' ? fieldInfo.label.english : fieldInfo.label.tamil;
+          } else {
+            label = key.replace(/([A-Z])/g, ' $1').trim();
+            label = label.charAt(0).toUpperCase() + label.slice(1);
+          }
+          
+          tableHTML += `<tr><td>${label}</td><td>${value}</td></tr>`;
+        }
+      } else {
+        tableHTML = `<tr><td colspan="2" style="text-align:center;">${currentLanguage === 'english' ? 'No size data available' : 'அளவு தரவு இல்லை'}</td></tr>`;
+      }
+      
+      body.innerHTML = tableHTML;
+      
+      const tableHeaders = modal.querySelectorAll('th');
+      tableHeaders.forEach(header => {
+        if (currentLanguage === 'english') {
+          header.textContent = header.getAttribute('data-english');
+        } else {
+          header.textContent = header.getAttribute('data-tamil');
+        }
+      });
+      
+      modal.classList.add('active');
+    };
+
+    document.getElementById('closeSizeDetailsBtn').addEventListener('click', () => {
+      document.getElementById('sizeDetailsModal').classList.remove('active');
+    });
+
+    function formatDate(dateValue) {
+      if (!dateValue) return currentLanguage === 'english' ? 'Unknown date' : 'தேதி தெரியவில்லை';
+      
+      try {
+        let date;
+        if (dateValue instanceof Timestamp) {
+          date = dateValue.toDate();
+        } else if (typeof dateValue === 'string') {
+          date = new Date(dateValue);
+        } else {
+          date = new Date(dateValue);
+        }
+        
+        if (isNaN(date.getTime())) return currentLanguage === 'english' ? 'Invalid date' : 'செல்லாத தேதி';
+        
+        return date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+      } catch (error) {
+        return currentLanguage === 'english' ? 'Unknown date' : 'தேதி தெரியவில்லை';
+      }
+    }
+
+    function formatDateTime(dateValue) {
+      if (!dateValue) return currentLanguage === 'english' ? 'Unknown time' : 'நேரம் தெரியவில்லை';
+      
+      try {
+        let date;
+        if (dateValue instanceof Timestamp) {
+          date = dateValue.toDate();
+        } else if (typeof dateValue === 'string') {
+          date = new Date(dateValue);
+        } else {
+          date = new Date(dateValue);
+        }
+        
+        if (isNaN(date.getTime())) return currentLanguage === 'english' ? 'Invalid time' : 'செல்லாத நேரம்';
+        
+        return date.toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        });
+      } catch (error) {
+        return currentLanguage === 'english' ? 'Unknown time' : 'நேரம் தெரியவில்லை';
+      }
+    }
+
+    function getDaysUntilDeadline(deadlineDate) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const deadline = new Date(deadlineDate);
+      deadline.setHours(0, 0, 0, 0);
+      const diffTime = deadline - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays;
+    }
+
+    function getUrgencyBadge(daysLeft) {
+      if (daysLeft < 0) {
+        return `<span class="priority-badge badge-urgent">${currentLanguage === 'english' ? 'Overdue' : 'காலக்கெடு தாண்டியது'}</span>`;
+      } else if (daysLeft === 0) {
+        return `<span class="priority-badge badge-urgent">${currentLanguage === 'english' ? 'Today' : 'இன்று'}</span>`;
+      } else if (daysLeft === 1) {
+        return `<span class="priority-badge badge-urgent">${currentLanguage === 'english' ? 'Tomorrow' : 'நாளை'}</span>`;
+      } else if (daysLeft <= 3) {
+        return `<span class="priority-badge badge-soon">${daysLeft} ${currentLanguage === 'english' ? 'days' : 'நாட்கள்'}</span>`;
+      } else if (daysLeft <= 7) {
+        return `<span class="priority-badge badge-normal">${daysLeft} ${currentLanguage === 'english' ? 'days' : 'நாட்கள்'}</span>`;
+      } else {
+        return `<span class="priority-badge badge-normal">${daysLeft} ${currentLanguage === 'english' ? 'days' : 'நாட்கள்'}</span>`;
+      }
+    }
+
+    async function loadPriorityOrders(){
+      const list = document.getElementById('priorityList');
+      
+      try {
+        const q = query(
+          collection(db, 'bills'), 
+          where('status', '==', 'Pending')
+        );
+        const querySnapshot = await getDocs(q);
+        
+        if(querySnapshot.empty){
+          list.innerHTML = `<div class="no-data">${currentLanguage === 'english' ? 'No pending orders' : 'நிலுவை ஆர்டர்கள் இல்லை'}</div>`;
+          return;
+        }
+
+        const bills = [];
+        querySnapshot.forEach((doc) => {
+          const billData = doc.data();
+          bills.push({
+            id: doc.id,
+            ...billData
+          });
+        });
+
+        bills.sort((a, b) => {
+          const daysA = getDaysUntilDeadline(a.deadlineDate);
+          const daysB = getDaysUntilDeadline(b.deadlineDate);
+          
+          if (daysA !== daysB) {
+            return daysA - daysB;
+          }
+          
+          const timeA = new Date(a.createdAt || 0).getTime();
+          const timeB = new Date(b.createdAt || 0).getTime();
+          return timeB - timeA;
+        });
+
+        list.innerHTML = bills.map(bill => {
+          const daysLeft = getDaysUntilDeadline(bill.deadlineDate);
+          const urgencyBadge = getUrgencyBadge(daysLeft);
+          
+          let progressText = '';
+          if(bill.items && bill.items.length > 0) {
+            const totalItems = bill.items.reduce((sum, item) => sum + item.count, 0);
+            const readyItems = bill.items.reduce((sum, item) => sum + (item.readyCount || 0), 0);
+            if(readyItems > 0) {
+              progressText = `<div class="priority-progress">${currentLanguage === 'english' ? 'Progress' : 'முன்னேற்றம்'}: ${readyItems}/${totalItems}</div>`;
+            }
+          }
+          
+          // Add payment status indicator
+          const totalAmount = bill.totalAmount || 0;
+          const advanceAmount = bill.advanceAmount || 0;
+          const balanceAmount = totalAmount - advanceAmount;
+          const paidBadge = balanceAmount === 0 ? 
+            '<span class="paid-badge">✓ Paid</span>' : 
+            '';
+          
+          return `
+            <div class="priority-item" onclick="window.loadBillFromPriority('${bill.billNo}')">
+              <div class="priority-bill">${bill.billNo} ${paidBadge}</div>
+              <div class="priority-bill" style="font-size:12px; margin-top:2px;">${bill.customerName}</div>
+              <div class="priority-deadline">${currentLanguage === 'english' ? 'Due:' : 'காலக்கெடு:'} ${formatDate(bill.deadlineDate)}</div>
+              <div class="priority-deadline" style="font-size:11px; margin-top:2px;">
+                ${currentLanguage === 'english' ? 'Advance:' : 'முன்பணம்:'} ₹${advanceAmount} | ${currentLanguage === 'english' ? 'Balance:' : 'இருப்பு:'} ₹${balanceAmount}
+              </div>
+              ${progressText}
+              ${urgencyBadge}
+            </div>
+          `;
+        }).join('');
+        
+      } catch (error) {
+        console.error('Error loading priority orders:', error);
+        list.innerHTML = `<div class="no-data">${currentLanguage === 'english' ? 'Error loading orders' : 'ஆர்டர்களை ஏற்றும் போது பிழை'}</div>`;
+      }
+    }
+
+    window.loadBillFromPriority = (billNo) => {
+      document.getElementById('billSearch').value = billNo;
+      enhancedSearch();
+    };
+
+    function openModal(id){ document.getElementById(id).classList.add('active'); }
+    function closeModal(id){ document.getElementById(id).classList.remove('active'); }
+
+    document.getElementById('cancelBtn').addEventListener('click', () => openModal('cancelModal'));
+    document.getElementById('cancelNoBtn').addEventListener('click', () => closeModal('cancelModal'));
+    document.getElementById('cancelYesBtn').addEventListener('click', async () => {
+      if(!currentBillId) return;
+      
+      try {
+        await updateDoc(doc(db, 'bills', currentBillId), {
+          status: 'Cancelled',
+          cancelledDate: Timestamp.now()
+        });
+        
+        alert(currentLanguage === 'english' ? 'Bill cancelled successfully!' : 'பில் வெற்றிகரமாக ரத்து செய்யப்பட்டது!');
+        closeModal('cancelModal');
+        document.getElementById('billDetails').classList.remove('active');
+        document.getElementById('searchSection').classList.remove('has-results');
+        document.getElementById('billSearch').value = '';
+        
+        // Update button visibility after cancellation
+        updateActionButtonsVisibility();
+        
+        loadPriorityOrders();
+      } catch (error) {
+        console.error('Error cancelling bill:', error);
+        alert(currentLanguage === 'english' ? 'Error cancelling bill. Please try again.' : 'பில் ரத்து செய்யும் போது பிழை. மீண்டும் முயற்சிக்கவும்.');
+      }
+    });
+
+    document.getElementById('payBtn').addEventListener('click', () => {
+      document.getElementById('paymentMobile').textContent = '9788128083';
+      document.getElementById('qrImage').src = 'qrcode.png';
+      openModal('paymentModal');
+    });
+    
+    document.getElementById('closePaymentBtn').addEventListener('click', () => closeModal('paymentModal'));
+// Also update the deliveredBtn click handler to remove the payment check
+document.getElementById('deliveredBtn').addEventListener('click', () => {
+  if (currentBill) {
+    openModal('deliveredModal');
+  }
+});
+    
+    document.getElementById('deliveredNoBtn').addEventListener('click', () => closeModal('deliveredModal'));
+    document.getElementById('deliveredYesBtn').addEventListener('click', async () => {
+      if(!currentBillId) return;
+      
+      closeModal('deliveredModal');
+      
+      try {
+        await updateDoc(doc(db, 'bills', currentBillId), {
+          status: 'Delivered',
+          deliveredDate: Timestamp.now()
+        });
+        
+        setTimeout(() => openModal('thankYouModal'), 300);
+        
+        // Update status in the UI
+        const statusElement = document.getElementById('detailStatus');
+        statusElement.textContent = getStatusText('Delivered');
+        statusElement.className = 'bill-status status-delivered';
+        
+        // Update button visibility after marking as delivered
+        updateActionButtonsVisibility();
+        
+        loadPriorityOrders();
+        
+      } catch (error) {
+        console.error('Error marking as delivered:', error);
+        alert(currentLanguage === 'english' ? 'Error updating status. Please try again.' : 'நிலையை புதுப்பிக்கும் போது பிழை. மீண்டும் முயற்சிக்கவும்.');
+      }
+    });
+
+    document.getElementById('fullPaidBtn').addEventListener('click', () => {
+      if (currentBill) {
+        const totalAmount = currentBill.totalAmount || 0;
+        updateAdvanceAmount(totalAmount);
+      }
+    });
+
+    document.getElementById('printBillBtn').addEventListener('click', () => {
+      if (currentBill) {
+        generatePrintableBill(currentBill);
+      }
+    });
+
+    document.getElementById('backToWorkspaceBtn').addEventListener('click', () => {
+      closeModal('thankYouModal');
+      document.getElementById('billDetails').classList.remove('active');
+      document.getElementById('searchSection').classList.remove('has-results');
+      document.getElementById('billSearch').value = '';
+      currentBill = null;
+      currentBillId = null;
+      loadPriorityOrders();
+    });
+
+    document.getElementById('createBillBtn').addEventListener('click', () => {
+      document.body.classList.add('transitioning');
+      setTimeout(() => window.location.href = 'billing.html', 600);
+    });
+
+    document.getElementById('finishedOrdersBtn').addEventListener('click', () => {
+      document.body.classList.add('transitioning');
+      setTimeout(() => window.location.href = 'finished.html', 600);
+    });
+
+    document.getElementById('deliveredOrdersBtn').addEventListener('click', () => {
+      document.body.classList.add('transitioning');
+      setTimeout(() => window.location.href = 'delivered.html', 600);
+    });
+
+    document.getElementById('cancelledOrdersBtn').addEventListener('click', () => {
+      document.body.classList.add('transitioning');
+      setTimeout(() => window.location.href = 'cancelled.html', 600);
+    });
+
+    document.getElementById('notPaidOrdersBtn').addEventListener('click', () => {
+      document.body.classList.add('transitioning');
+      setTimeout(() => window.location.href = 'notpaid.html', 600);
+    });
+
+    function generatePrintableBill(bill) {
+      const printableBill = document.getElementById('printable-bill');
+      
+      // Create professional bill HTML with optimized layout for single page
+      const billHTML = `
+        <div class="print-page">
+          <div style="font-family: 'Arial', sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: white; color: black; position: relative; min-height: 100vh; box-sizing: border-box;">
+            
+            <!-- Header Section -->
+            <div style="text-align: center; margin-bottom: 25px; border-bottom: 3px solid #333; padding-bottom: 15px;">
+              <div style="display: inline-block; width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #71e0ff, #b47bff); display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 40px; font-weight: 900; color: white; font-family: 'Arial Black', sans-serif;">
+                N
+              </div>
+              <h1 style="margin: 0; color: #333; font-size: 28px; font-weight: bold;">NISHANTH TAILORS</h1>
+              <p style="margin: 5px 0 0; color: #666; font-size: 14px;">Professional Tailoring Services</p>
+            </div>
+            
+            <!-- Bill Number and Status -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+              <div>
+                <div style="font-size: 20px; font-weight: bold; color: #333;">Bill No: ${bill.billNo}</div>
+                <div style="font-size: 16px; color: #666;">${bill.customerName}</div>
+              </div>
+              <div style="text-align: right;">
+                <div style="padding: 8px 16px; background: ${bill.status === 'Delivered' ? '#4CAF50' : bill.status === 'Cancelled' ? '#f44336' : '#2196F3'}; color: white; border-radius: 20px; font-weight: bold; font-size: 14px;">
+                  ${bill.status || 'Pending'}
+                </div>
+                <div style="font-size: 12px; color: #666; margin-top: 5px;">${formatDate(bill.billingDate)}</div>
+              </div>
+            </div>
+            
+            <!-- Customer and Bill Details -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+              <div style="padding: 15px; border: 1px solid #e0e0e0; border-radius: 8px;">
+                <h3 style="margin: 0 0 12px 0; color: #333; font-size: 16px; border-bottom: 2px solid #71e0ff; padding-bottom: 8px;">Customer Information</h3>
+                <table style="width: 100%;">
+                  <tr><td style="padding: 4px 0; font-weight: bold; width: 40%;">Name:</td><td style="padding: 4px 0;">${bill.customerName}</td></tr>
+                  <tr><td style="padding: 4px 0; font-weight: bold;">Mobile:</td><td style="padding: 4px 0;">${bill.mobileNo}</td></tr>
+                  <tr><td style="padding: 4px 0; font-weight: bold;">Bill Date:</td><td style="padding: 4px 0;">${formatDate(bill.billingDate)}</td></tr>
+                  <tr><td style="padding: 4px 0; font-weight: bold;">Created:</td><td style="padding: 4px 0;">${formatDate(bill.createdAt)} ${formatDateTime(bill.createdAt)}</td></tr>
+                </table>
+              </div>
+              
+              <div style="padding: 15px; border: 1px solid #e0e0e0; border-radius: 8px;">
+                <h3 style="margin: 0 0 12px 0; color: #333; font-size: 16px; border-bottom: 2px solid #b47bff; padding-bottom: 8px;">Delivery Information</h3>
+                <table style="width: 100%;">
+                  <tr><td style="padding: 4px 0; font-weight: bold; width: 40%;">Deadline:</td><td style="padding: 4px 0;">${formatDate(bill.deadlineDate)}</td></tr>
+                  <tr><td style="padding: 4px 0; font-weight: bold;">Delivered:</td><td style="padding: 4px 0;">${bill.deliveredDate ? formatDate(bill.deliveredDate) + ' ' + formatDateTime(bill.deliveredDate) : 'Not Delivered'}</td></tr>
+                  <tr><td style="padding: 4px 0; font-weight: bold;">Payment:</td><td style="padding: 4px 0;">${bill.paymentMethod || 'Cash'}</td></tr>
+                  <tr><td style="padding: 4px 0; font-weight: bold;">Status:</td><td style="padding: 4px 0;"><span style="color: ${(bill.totalAmount || 0) - (bill.advanceAmount || 0) === 0 ? '#4CAF50' : '#ff9800'}">${(bill.totalAmount || 0) - (bill.advanceAmount || 0) === 0 ? 'Paid' : 'Pending'}</span></td></tr>
+                </table>
+              </div>
+            </div>
+            
+            <!-- Payment Summary -->
+            <div style="margin-bottom: 25px; padding: 15px; border: 1px solid #e0e0e0; border-radius: 8px;">
+              <h3 style="margin: 0 0 15px 0; color: #333; font-size: 16px; border-bottom: 2px solid #ff71e0; padding-bottom: 8px;">Payment Summary</h3>
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: center;">
+                <div style="padding: 12px; background: #f8f9fa; border-radius: 6px;">
+                  <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Total Amount</div>
+                  <div style="font-size: 18px; font-weight: bold; color: #333;">₹${bill.totalAmount || 0}</div>
+                </div>
+                <div style="padding: 12px; background: #f8f9fa; border-radius: 6px;">
+                  <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Advance Paid</div>
+                  <div style="font-size: 18px; font-weight: bold; color: #4CAF50;">₹${bill.advanceAmount || 0}</div>
+                </div>
+                <div style="padding: 12px; background: #f8f9fa; border-radius: 6px;">
+                  <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Balance Amount</div>
+                  <div style="font-size: 18px; font-weight: bold; color: #ff9800;">₹${(bill.totalAmount || 0) - (bill.advanceAmount || 0)}</div>
+                </div>
+                <div style="padding: 12px; background: #f8f9fa; border-radius: 6px;">
+                  <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Payment Status</div>
+                  <div style="font-size: 14px; font-weight: bold; color: ${(bill.totalAmount || 0) - (bill.advanceAmount || 0) === 0 ? '#4CAF50' : '#ff9800'}">${(bill.totalAmount || 0) - (bill.advanceAmount || 0) === 0 ? 'FULLY PAID' : 'BALANCE DUE'}</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Items Table -->
+            ${bill.items && bill.items.length > 0 ? `
+            <div style="margin-bottom: 25px;">
+              <h3 style="margin: 0 0 15px 0; color: #333; font-size: 16px; border-bottom: 2px solid #71e0ff; padding-bottom: 8px;">Ordered Items</h3>
+              <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                <thead>
+                  <tr style="background: linear-gradient(135deg, #71e0ff, #b47bff); color: white;">
+                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Item Type</th>
+                    <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Count</th>
+                    <th style="padding: 10px; text-align: right; border: 1px solid #ddd;">Price</th>
+                    <th style="padding: 10px; text-align: right; border: 1px solid #ddd;">Total</th>
+                    <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Ready</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${bill.items.map(item => {
+                    const readyCount = item.readyCount || 0;
+                    const isCompleted = readyCount >= item.count;
+                    return `
+                    <tr>
+                      <td style="padding: 8px; border: 1px solid #ddd;">${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</td>
+                      <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${item.count}</td>
+                      <td style="padding: 8px; text-align: right; border: 1px solid #ddd;">₹${item.price}</td>
+                      <td style="padding: 8px; text-align: right; border: 1px solid #ddd;">₹${item.total}</td>
+                      <td style="padding: 8px; text-align: center; border: 1px solid #ddd; color: ${isCompleted ? '#4CAF50' : '#ff9800'}">${isCompleted ? '✓ Completed' : `${readyCount}/${item.count}`}</td>
+                    </tr>
+                    `;
+                  }).join('')}
+                </tbody>
+              </table>
+            </div>
+            ` : ''}
+            
+            <!-- Total Amount Highlight -->
+            <div style="text-align: center; margin: 25px 0; padding: 20px; background: linear-gradient(135deg, #71e0ff, #b47bff); border-radius: 10px; color: white;">
+              <div style="font-size: 14px; margin-bottom: 5px;">GRAND TOTAL</div>
+              <div style="font-size: 32px; font-weight: bold;">₹${bill.totalAmount || 0}</div>
+              <div style="font-size: 12px; margin-top: 5px;">
+                ${(bill.totalAmount || 0) - (bill.advanceAmount || 0) === 0 ? 
+                  'Payment Completed • Thank You!' : 
+                  `Balance Due: ₹${(bill.totalAmount || 0) - (bill.advanceAmount || 0)}`}
+              </div>
+            </div>
+            
+            <!-- Footer -->
+            <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #333; font-size: 11px; color: #666;">
+              <p style="margin: 5px 0;">Thank you for choosing Nishanth Tailors</p>
+              <p style="margin: 5px 0;">Contact: 9788128083 | Email: nishanthtailorsjn@gmail.com</p>
+              <p style="margin: 5px 0;">Generated on: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</p>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      printableBill.innerHTML = billHTML;
+      printableBill.style.display = 'block';
+      
+      // Print the bill
+      setTimeout(() => {
+        window.print();
+        // Hide printable bill after printing
+        setTimeout(() => {
+          printableBill.style.display = 'none';
+          printableBill.innerHTML = '';
+        }, 100);
+      }, 500);
+    }
+
+    loadAllBills();
+    loadPriorityOrders();
+  </script>
+</body>
+</html>

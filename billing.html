@@ -1,0 +1,2655 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Voice Billing - Nishanth Tailors</title>
+  <style>
+    :root{
+      --bg1: #0f1724;
+      --bg2: #081126;
+      --text: #e7f7ff;
+      --muted: rgba(231,247,255,0.7);
+      --error: rgba(255, 100, 100, 0.3);
+      --success: rgba(100, 255, 150, 0.3);
+      --warning: rgba(255, 200, 100, 0.3);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', Inter, ui-sans-serif, system-ui;
+    }
+
+    *{box-sizing:border-box; margin:0; padding:0}
+    
+    body{
+      min-height:100vh;
+      background: radial-gradient(1200px 600px at 10% 20%, rgba(110,30,255,0.12), transparent 6%),
+                  radial-gradient(900px 400px at 90% 80%, rgba(0,200,255,0.08), transparent 8%),
+                  linear-gradient(180deg,var(--bg1),var(--bg2));
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      display:grid;
+      place-items:center;
+      padding:40px 20px;
+      opacity:0;
+      animation:page-enter 1000ms cubic-bezier(.25,.46,.45,.94) forwards;
+    }
+
+    @keyframes page-enter{
+      to{opacity:1}
+    }
+
+    .billing-container{
+      max-width:900px;
+      width:100%;
+      background:linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border:1.5px solid rgba(255,255,255,0.1);
+      border-radius:28px;
+      padding:48px 40px;
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      box-shadow:0 12px 48px rgba(0,0,0,0.5);
+      transform:translateY(30px);
+      opacity:0;
+      animation:container-enter 1000ms cubic-bezier(.25,.46,.45,.94) 200ms forwards;
+    }
+
+    @keyframes container-enter{
+      to{transform:translateY(0); opacity:1}
+    }
+
+    .header-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .language-switch {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .language-btn {
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 300ms ease;
+    }
+
+    .language-btn.active {
+      background: linear-gradient(135deg, rgba(120,220,255,0.3), rgba(180,120,255,0.3));
+      border-color: rgba(120,220,255,0.4);
+    }
+
+    .language-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .title{
+      font-size:42px;
+      font-weight:800;
+      text-align:center;
+      margin-bottom:12px;
+      background:linear-gradient(135deg, #71e0ff, #b47bff);
+      -webkit-background-clip:text;
+      background-clip:text;
+      -webkit-text-fill-color:transparent;
+      letter-spacing:1px;
+      text-transform:uppercase;
+    }
+
+    .subtitle{
+      text-align:center;
+      color:var(--muted);
+      font-size:15px;
+      margin-bottom:40px;
+      font-weight:500;
+    }
+
+    .form-group{
+      margin-bottom:24px;
+      position:relative;
+    }
+
+    .form-label{
+      display:block;
+      font-size:13px;
+      font-weight:600;
+      color:var(--muted);
+      margin-bottom:10px;
+      letter-spacing:0.8px;
+      text-transform:uppercase;
+    }
+
+    .form-input{
+      width:100%;
+      height:54px;
+      background:linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border:1.5px solid rgba(255,255,255,0.1);
+      border-radius:14px;
+      padding:0 20px;
+      font-size:16px;
+      color:var(--text);
+      font-family:inherit;
+      transition:all 400ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    .form-input:focus{
+      outline:none;
+      border-color:rgba(120,220,255,0.5);
+      background:linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.04));
+      box-shadow:0 0 0 4px rgba(120,220,255,0.1);
+    }
+
+    .form-input.voice-active{
+      border-color:rgba(100,255,150,0.6);
+      background:linear-gradient(135deg, rgba(100,255,150,0.15), rgba(100,255,150,0.08));
+      box-shadow:0 0 0 4px rgba(100,255,150,0.15);
+      animation: voicePulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes voicePulse {
+      0%, 100% { box-shadow: 0 0 0 4px rgba(100,255,150,0.15); }
+      50% { box-shadow: 0 0 0 8px rgba(100,255,150,0.25); }
+    }
+
+    .form-input.error{
+      border-color:rgba(255,100,100,0.5);
+      background:linear-gradient(135deg, rgba(255,100,100,0.1), rgba(255,100,100,0.05));
+      box-shadow:0 0 0 4px rgba(255,100,100,0.1);
+    }
+
+    .form-input.success{
+      border-color:rgba(100,255,150,0.5);
+      background:linear-gradient(135deg, rgba(100,255,150,0.1), rgba(100,255,150,0.05));
+      box-shadow:0 0 0 4px rgba(100,255,150,0.1);
+    }
+
+    .form-input::placeholder{
+      color:rgba(231,247,255,0.4);
+    }
+
+    .error-message{
+      color:#ff6b6b;
+      font-size:12px;
+      font-weight:600;
+      margin-top:6px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      animation:error-shake 300ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    .success-message{
+      color:#6bff9e;
+      font-size:12px;
+      font-weight:600;
+      margin-top:6px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      animation:success-pop 300ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    @keyframes error-shake{
+      0%, 100%{transform:translateX(0)}
+      25%{transform:translateX(-4px)}
+      75%{transform:translateX(4px)}
+    }
+
+    @keyframes success-pop{
+      0%{transform:scale(0.8)}
+      100%{transform:scale(1)}
+    }
+
+    .date-input{
+      cursor:pointer;
+    }
+
+    select.form-input{
+      cursor:pointer;
+    }
+
+    .orders-section{
+      margin-top:40px;
+      padding-top:32px;
+      border-top:1.5px solid rgba(255,255,255,0.1);
+    }
+
+    .section-title{
+      font-size:24px;
+      font-weight:700;
+      margin-bottom:24px;
+      color:var(--text);
+      text-align:center;
+    }
+
+    .item-selector{
+      display:flex;
+      gap:16px;
+      margin-bottom:24px;
+      flex-wrap:wrap;
+    }
+
+    .item-checkbox{
+      flex:1;
+      min-width:150px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:16px 20px;
+      background:linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border:1.5px solid rgba(255,255,255,0.1);
+      border-radius:14px;
+      cursor:pointer;
+      transition:all 400ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    .item-checkbox:hover{
+      background:linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.04));
+      border-color:rgba(120,220,255,0.3);
+    }
+
+    .item-checkbox.selected{
+      border-color:rgba(120,220,255,0.5);
+      background:linear-gradient(135deg, rgba(120,220,255,0.15), rgba(180,120,255,0.1));
+    }
+
+    .item-checkbox input[type="checkbox"]{
+      width:20px;
+      height:20px;
+      cursor:pointer;
+    }
+
+    .item-checkbox label{
+      cursor:pointer;
+      font-weight:600;
+      font-size:14px;
+    }
+
+    .item-details{
+      display:none;
+      margin-top:24px;
+      padding:24px;
+      background:linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border:1.5px solid rgba(255,255,255,0.08);
+      border-radius:14px;
+      transform:translateY(10px);
+      opacity:0;
+      transition:all 400ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    .item-details.active{
+      display:block;
+      transform:translateY(0);
+      opacity:1;
+    }
+
+    .detail-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .btn-size-table{
+      width:100%;
+      padding:12px;
+      background:linear-gradient(135deg, rgba(120,220,255,0.2), rgba(180,120,255,0.2));
+      border:1.5px solid rgba(120,220,255,0.3);
+      border-radius:10px;
+      color:var(--text);
+      font-weight:600;
+      cursor:pointer;
+      transition:all 400ms cubic-bezier(.34,.46,.45,.94);
+      font-family:inherit;
+      font-size:14px;
+    }
+
+    .btn-size-table:hover{
+      background:linear-gradient(135deg, rgba(120,220,255,0.3), rgba(180,120,255,0.3));
+      transform:translateY(-2px);
+    }
+
+    .added-items{
+      margin-top:32px;
+    }
+
+    .item-card{
+      background:linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border:1.5px solid rgba(255,255,255,0.1);
+      border-radius:14px;
+      padding:20px;
+      margin-bottom:16px;
+      position:relative;
+      transform:translateY(10px);
+      opacity:0;
+      animation:item-appear 500ms cubic-bezier(.34,.46,.45,.94) forwards;
+    }
+
+    @keyframes item-appear{
+      to{transform:translateY(0); opacity:1}
+    }
+
+    .item-card-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:12px;
+    }
+
+    .item-card-title{
+      font-size:18px;
+      font-weight:700;
+      color:var(--text);
+    }
+
+    .btn-remove{
+      background:rgba(255,100,100,0.2);
+      border:1.5px solid rgba(255,100,100,0.3);
+      color:var(--text);
+      width:32px;
+      height:32px;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:700;
+      transition:all 300ms;
+    }
+
+    .btn-remove:hover{
+      background:rgba(255,100,100,0.3);
+    }
+
+    .item-info{
+      font-size:14px;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+
+    .payment-section{
+      margin-top:32px;
+      padding:24px;
+      background:linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border:1.5px solid rgba(255,255,255,0.08);
+      border-radius:14px;
+    }
+
+    .payment-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .total-section{
+      margin-top:32px;
+      padding:24px;
+      background:linear-gradient(135deg, rgba(120,220,255,0.15), rgba(180,120,255,0.1));
+      border:1.5px solid rgba(120,220,255,0.3);
+      border-radius:14px;
+      text-align:center;
+    }
+
+    .total-label{
+      font-size:16px;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+
+    .total-amount{
+      font-size:36px;
+      font-weight:800;
+      background:linear-gradient(135deg, #71e0ff, #b47bff);
+      -webkit-background-clip:text;
+      background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .balance-section{
+      margin-top:16px;
+      padding:16px;
+      background:linear-gradient(135deg, rgba(100,255,150,0.15), rgba(63,230,167,0.1));
+      border:1.5px solid rgba(100,255,150,0.3);
+      border-radius:14px;
+      text-align:center;
+    }
+
+    .balance-label{
+      font-size:14px;
+      color:var(--muted);
+      margin-bottom:4px;
+    }
+
+    .balance-amount{
+      font-size:24px;
+      font-weight:700;
+      color:#6bff9e;
+    }
+
+    .button-group{
+      display:flex;
+      gap:16px;
+      margin-top:40px;
+    }
+
+    .btn{
+      flex:1;
+      height:56px;
+      border-radius:16px;
+      border:none;
+      font-size:16px;
+      font-weight:700;
+      font-family:inherit;
+      cursor:pointer;
+      transition:all 400ms cubic-bezier(.34,.46,.45,.94);
+      letter-spacing:0.5px;
+      text-transform:uppercase;
+    }
+
+    .btn-back{
+      background:linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border:1.5px solid rgba(255,255,255,0.15);
+      color:var(--text);
+    }
+
+    .btn-back:hover{
+      background:linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+      transform:translateY(-3px);
+      box-shadow:0 8px 24px rgba(0,0,0,0.3);
+    }
+
+    .btn-submit{
+      background:linear-gradient(135deg, rgba(120,220,255,0.4), rgba(180,120,255,0.4));
+      border:1.5px solid rgba(120,220,255,0.5);
+      color:var(--text);
+    }
+
+    .btn-submit:hover{
+      background:linear-gradient(135deg, rgba(120,220,255,0.5), rgba(180,120,255,0.5));
+      transform:translateY(-3px);
+      box-shadow:0 8px 32px rgba(120,220,255,0.4);
+    }
+
+    .btn-add-item{
+      width:100%;
+      margin-top:16px;
+    }
+
+    .btn:active{
+      transform:translateY(0) !important;
+    }
+
+    .btn:disabled{
+      opacity:0.5;
+      cursor:not-allowed;
+      transform:none !important;
+    }
+
+    .modal{
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(4,8,18,0.95);
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      z-index:200;
+      place-items:center;
+      opacity:0;
+      transition:opacity 400ms cubic-bezier(.25,.46,.45,.94);
+      overflow-y:auto;
+    }
+
+    .modal.active{
+      display:grid;
+      opacity:1;
+    }
+
+    .modal-content{
+      background:linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+      border:1.5px solid rgba(255,255,255,0.15);
+      border-radius:28px;
+      padding:40px;
+      max-width:800px;
+      width:90%;
+      max-height:85vh;
+      overflow-y:auto;
+      transform:scale(0.8) translateY(30px);
+      transition:transform 600ms cubic-bezier(.34,.46,.45,.94);
+      margin:40px 0;
+    }
+
+    .modal.active .modal-content{
+      transform:scale(1) translateY(0);
+    }
+
+    .success-icon{
+      width:80px;
+      height:80px;
+      margin:0 auto 24px;
+      border-radius:50%;
+      background:linear-gradient(135deg, rgba(140,255,207,0.3), rgba(63,230,167,0.3));
+      display:grid;
+      place-items:center;
+      font-size:48px;
+      animation:success-pop 600ms cubic-bezier(.34,1.56,.64,1);
+    }
+
+    @keyframes success-pop{
+      0%{transform:scale(0) rotate(-180deg)}
+      100%{transform:scale(1) rotate(0)}
+    }
+
+    .modal-title{
+      font-size:24px;
+      font-weight:700;
+      margin-bottom:16px;
+      color:var(--text);
+      text-align:center;
+    }
+
+    .modal-text{
+      font-size:16px;
+      color:var(--muted);
+      margin-bottom:24px;
+      line-height:1.6;
+      text-align:center;
+    }
+
+    .bill-number-display{
+      font-size:36px;
+      font-weight:800;
+      background:linear-gradient(135deg, #71e0ff, #b47bff);
+      -webkit-background-clip:text;
+      background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin:20px 0;
+      letter-spacing:2px;
+      text-align:center;
+    }
+
+    .size-table{
+      width:100%;
+      margin-top:16px;
+      border-collapse:collapse;
+    }
+
+    .size-table th{
+      background:linear-gradient(135deg, rgba(120,220,255,0.2), rgba(180,120,255,0.2));
+      padding:12px;
+      text-align:left;
+      font-size:13px;
+      font-weight:600;
+      border:1.5px solid rgba(255,255,255,0.1);
+    }
+
+    .size-table td{
+      padding:12px;
+      border:1.5px solid rgba(255,255,255,0.1);
+    }
+
+    .size-table input{
+      width:100%;
+      background:linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:8px;
+      padding:8px;
+      color:var(--text);
+      font-size:14px;
+      transition: all 300ms ease;
+    }
+
+    .size-table input:focus{
+      outline:none;
+      border-color:rgba(120,220,255,0.5);
+      background:linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+    }
+
+    .btn-close-modal{
+      width:100%;
+      margin-top:24px;
+    }
+
+    body.transitioning{
+      animation:page-exit 600ms cubic-bezier(.55,.055,.675,.19) forwards;
+    }
+
+    @keyframes page-exit{
+      to{opacity:0; transform:scale(1.02)}
+    }
+
+    /* Voice Assistant Styles */
+    .voice-assistant {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 1000;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .voice-assistant:hover {
+      transform: scale(1.05);
+    }
+
+    .voice-assistant.pulse {
+      animation: assistantPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes assistantPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    .assistant-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .voice-status {
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(240,240,255,0.95));
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #333;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    .voice-status.active {
+      opacity: 1;
+      top: -50px;
+    }
+
+    .voice-status.listening {
+      background: linear-gradient(135deg, #4ade80, #22c55e);
+      color: white;
+      animation: statusPulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes statusPulse {
+      0%, 100% { box-shadow: 0 4px 12px rgba(34,197,94,0.4); }
+      50% { box-shadow: 0 6px 20px rgba(34,197,94,0.6); }
+    }
+
+    /* Robot Assistant */
+    .robot-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .robot {
+      width: 140px;
+      height: 140px;
+      position: relative;
+      cursor: pointer;
+      transition: transform 400ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    .robot:hover {
+      transform: scale(1.05);
+    }
+
+    .robot:active {
+      transform: scale(0.95);
+    }
+
+    .robot.talking {
+      animation: robot-talk 600ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    @keyframes robot-talk {
+      0% { transform: scale(1) rotate(0deg); }
+      25% { transform: scale(1.08) rotate(-3deg); }
+      50% { transform: scale(1.12) rotate(3deg); }
+      75% { transform: scale(1.08) rotate(-2deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    .robot-body {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+      border-radius: 30px;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      box-shadow: 0 8px 32px rgba(3,8,30,0.6), inset 0 2px 0 rgba(255,255,255,0.08);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      overflow: hidden;
+      transition: transform 400ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    .robot-shine {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent 60%);
+      border-radius: inherit;
+      pointer-events: none;
+      mix-blend-mode: overlay;
+    }
+
+    .robot-eyes {
+      position: absolute;
+      top: 35%;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;
+      transition: transform 300ms cubic-bezier(.34,.46,.45,.94);
+    }
+    /* Add this to your existing style section */
+.back-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 300ms ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 100;
+}
+
+.back-button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.08));
+}
+
+    .eye {
+      width: 22px;
+      height: 22px;
+      background: linear-gradient(135deg, #71e0ff, #9b7bff);
+      border-radius: 50%;
+      box-shadow: 0 4px 16px rgba(120,220,255,0.5), inset 0 -2px 4px rgba(0,0,0,0.2);
+      position: relative;
+      animation: eye-blink 4000ms cubic-bezier(.45,.05,.55,.95) infinite;
+    }
+
+    .eye::after {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: 5px;
+      width: 8px;
+      height: 8px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(255,255,255,0.3);
+    }
+
+    @keyframes eye-blink {
+      0%, 96%, 100% { transform: scaleY(1); }
+      98% { transform: scaleY(0.1); }
+    }
+
+    .robot.talking .eye {
+      animation: eye-excited 600ms cubic-bezier(.34,.46,.45,.94) infinite;
+    }
+
+    @keyframes eye-excited {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    .robot-mouth {
+      position: absolute;
+      bottom: 32%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 20px;
+      border: 2.5px solid rgba(120,220,255,0.8);
+      border-top: none;
+      border-radius: 0 0 20px 20px;
+      transition: all 300ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    .robot.talking .robot-mouth {
+      animation: mouth-talk 200ms cubic-bezier(.34,.46,.45,.94) infinite;
+    }
+
+    @keyframes mouth-talk {
+      0%, 100% { height: 20px; border-radius: 0 0 20px 20px; }
+      50% { height: 8px; border-radius: 0 0 12px 12px; }
+    }
+
+    .robot-antenna {
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 3px;
+      height: 18px;
+      background: linear-gradient(180deg, rgba(120,220,255,0.6), transparent);
+      border-radius: 999px;
+    }
+
+    .robot-antenna::after {
+      content: '';
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 10px;
+      height: 10px;
+      background: radial-gradient(circle, #71e0ff, #9b7bff);
+      border-radius: 50%;
+      box-shadow: 0 0 12px rgba(120,220,255,0.8);
+      animation: antenna-pulse 2000ms cubic-bezier(.45,.05,.55,.95) infinite;
+    }
+
+    @keyframes antenna-pulse {
+      0%, 100% { transform: translateX(-50%) scale(1); opacity: 1; }
+      50% { transform: translateX(-50%) scale(1.3); opacity: 0.7; }
+    }
+
+    .robot-accent {
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, rgba(120,220,255,0.4), rgba(180,120,255,0.4));
+      border-radius: 999px;
+      box-shadow: 0 2px 8px rgba(120,220,255,0.3);
+    }
+
+    .welcome-bubble {
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.08));
+      border: 1.5px solid rgba(255,255,255,0.15);
+      border-radius: 18px;
+      padding: 10px 18px;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 6px 24px rgba(3,8,30,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      position: relative;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateY(10px) scale(0.9);
+      transition: opacity 300ms cubic-bezier(.25,.46,.45,.94),
+                 transform 300ms cubic-bezier(.25,.46,.45,.94);
+      pointer-events: none;
+    }
+
+    .voice-assistant.active .welcome-bubble {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .welcome-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      right: 30px;
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 8px solid rgba(255,255,255,0.1);
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+
+    .robot.talking .welcome-bubble {
+      animation: bubble-bounce 600ms cubic-bezier(.34,.46,.45,.94);
+    }
+
+    @keyframes bubble-bounce {
+      0% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-4px) scale(1.02); }
+      100% { transform: translateY(0) scale(1); }
+    }
+
+    /* Billing Animations */
+    @keyframes billCalculation {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .calculating .total-amount {
+      animation: billCalculation 1s ease-in-out;
+    }
+
+    @keyframes itemAdded {
+      0% { transform: translateY(20px) scale(0.9); opacity: 0; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .item-added {
+      animation: itemAdded 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes paymentSuccess {
+      0% { transform: scale(0.8); opacity: 0; }
+      70% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .payment-success {
+      animation: paymentSuccess 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @media (max-width:768px){
+      .billing-container{
+        padding:32px 24px;
+      }
+      .title{
+        font-size:32px;
+      }
+      .button-group{
+        flex-direction:column;
+      }
+      .item-selector{
+        flex-direction:column;
+      }
+      .detail-row{
+        grid-template-columns:1fr;
+      }
+      .payment-row{
+        grid-template-columns:1fr;
+      }
+      .size-table{
+        font-size:12px;
+      }
+      .size-table th, .size-table td{
+        padding:8px;
+      }
+      .header-section {
+        flex-direction: column;
+        gap: 15px;
+      }
+      .voice-assistant {
+        bottom: 20px;
+        right: 20px;
+      }
+      .robot {
+        width: 100px;
+        height: 100px;
+      }
+      .welcome-bubble {
+        font-size: 12px;
+        padding: 8px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+   <button class="back-button" onclick="window.location.href='workspace.html'">
+    ← 
+  </button>
+  <!-- Voice Assistant -->
+  <div class="voice-assistant" id="voiceAssistant">
+    <div class="assistant-container">
+      <div class="voice-status" id="voiceStatus">Click me to start!</div>
+      <div class="robot-container">
+        <div class="welcome-bubble" id="robotBubble" data-english="Ready for voice billing! 🎤" data-tamil="குரல் பில்லிங்கிற்கு தயார்! 🎤">Ready for voice billing! 🎤</div>
+        <div class="robot" id="robot" role="button" tabindex="0" aria-label="Interactive robot assistant">
+          <div class="robot-body">
+            <div class="robot-shine"></div>
+            <div class="robot-antenna"></div>
+            <div class="robot-eyes" id="robotEyes">
+              <div class="eye"></div>
+              <div class="eye"></div>
+            </div>
+            <div class="robot-mouth"></div>
+            <div class="robot-accent"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="billing-container">
+    <div class="header-section">
+      <div></div>
+      <div class="language-switch">
+        <button class="language-btn active" id="englishBtn">English</button>
+        <button class="language-btn" id="tamilBtn">தமிழ்</button>
+      </div>
+    </div>
+
+    <h1 class="title" data-english="Nishanth Tailors" data-tamil="நிஷாந்த் டெய்லர்ஸ்">Nishanth Tailors</h1>
+    <p class="subtitle" data-english="Create New Bill" data-tamil="புதிய பில் உருவாக்க">Create New Bill</p>
+
+    <form id="billingForm">
+      <div class="form-group">
+        <label class="form-label" data-english="Bill No:" data-tamil="பில் எண்:">Bill No:</label>
+        <input type="text" class="form-input" id="billNo" placeholder="e.g., B001" data-field="billNo" required />
+        <div class="error-message" id="billNoError" style="display:none;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span data-english="Bill No. already exists" data-tamil="பில் எண் ஏற்கனவே உள்ளது">Bill No. already exists</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" data-english="Customer Name:" data-tamil="வாடிக்கையாளர் பெயர்:">Customer Name:</label>
+        <input type="text" class="form-input" id="customerName" placeholder="Enter customer name" data-field="customerName" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" data-english="Mobile No:" data-tamil="மொபைல் எண்:">Mobile No:</label>
+        <input type="tel" class="form-input" id="mobileNo" placeholder="Enter mobile number" pattern="[0-9]{10}" data-field="mobileNo" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" data-english="Billing Date:" data-tamil="பில் தேதி:">Billing Date:</label>
+        <input type="date" class="form-input date-input" id="billingDate" data-field="billingDate" required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" data-english="Deadline Date:" data-tamil="காலக்கெடு தேதி:">Deadline Date:</label>
+        <input type="date" class="form-input date-input" id="deadlineDate" data-field="deadlineDate" required />
+      </div>
+
+      <div class="orders-section">
+        <h2 class="section-title" data-english="Ordered Items" data-tamil="ஆர்டர் செய்யப்பட்ட பொருட்கள்">Ordered Items</h2>
+        
+        <div class="item-selector">
+          <div class="item-checkbox" id="shirtCheckbox">
+            <input type="checkbox" id="shirtCheck" />
+            <label for="shirtCheck" data-english="Shirt" data-tamil="சட்டை">Shirt</label>
+          </div>
+          <div class="item-checkbox" id="fantCheckbox">
+            <input type="checkbox" id="fantCheck" />
+            <label for="fantCheck" data-english="Fant" data-tamil="பேண்ட்">Fant</label>
+          </div>
+          <div class="item-checkbox" id="trouserCheckbox">
+            <input type="checkbox" id="trouserCheck" />
+            <label for="trouserCheck" data-english="Trouser" data-tamil="டிரௌசர்">Trouser</label>
+          </div>
+          <div class="item-checkbox" id="courtCheckbox">
+            <input type="checkbox" id="courtCheck" />
+            <label for="courtCheck" data-english="Court" data-tamil="கோர்ட்">Court</label>
+          </div>
+        </div>
+
+        <div class="item-details" id="shirtDetails">
+          <h3 style="margin-bottom:16px; font-size:18px;" data-english="Shirt Details" data-tamil="சட்டை விவரங்கள்">Shirt Details</h3>
+          <div class="detail-row">
+            <div class="form-group">
+              <label class="form-label" data-english="Count:" data-tamil="எண்ணிக்கை:">Count:</label>
+              <input type="number" class="form-input" id="shirtCount" data-field="shirtCount" min="1" value="1" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-english="Price (Rs.):" data-tamil="விலை (ரூ.):">Price (Rs.):</label>
+              <input type="number" class="form-input" id="shirtPrice" data-field="shirtPrice" min="0" placeholder="Enter price" />
+            </div>
+          </div>
+          <button type="button" class="btn-size-table" onclick="openSizeModal('shirt')" data-english="Enter Shirt Sizes" data-tamil="சட்டை அளவுகளை உள்ளிடவும்">Enter Shirt Sizes</button>
+          <button type="button" class="btn btn-submit btn-add-item" onclick="addItem('shirt')" data-english="Add Shirt" data-tamil="சட்டையை சேர்க்க">Add Shirt</button>
+        </div>
+
+        <div class="item-details" id="fantDetails">
+          <h3 style="margin-bottom:16px; font-size:18px;" data-english="Fant Details" data-tamil="பேண்ட் விவரங்கள்">Fant Details</h3>
+          <div class="detail-row">
+            <div class="form-group">
+              <label class="form-label" data-english="Count:" data-tamil="எண்ணிக்கை:">Count:</label>
+              <input type="number" class="form-input" id="fantCount" data-field="fantCount" min="1" value="1" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-english="Price (Rs.):" data-tamil="விலை (ரூ.):">Price (Rs.):</label>
+              <input type="number" class="form-input" id="fantPrice" data-field="fantPrice" min="0" placeholder="Enter price" />
+            </div>
+          </div>
+          <button type="button" class="btn-size-table" onclick="openSizeModal('fant')" data-english="Enter Fant Sizes" data-tamil="பேண்ட் அளவுகளை உள்ளிடவும்">Enter Fant Sizes</button>
+          <button type="button" class="btn btn-submit btn-add-item" onclick="addItem('fant')" data-english="Add Fant" data-tamil="பேண்டை சேர்க்க">Add Fant</button>
+        </div>
+
+        <div class="item-details" id="trouserDetails">
+          <h3 style="margin-bottom:16px; font-size:18px;" data-english="Trouser Details" data-tamil="டிரௌசர் விவரங்கள்">Trouser Details</h3>
+          <div class="detail-row">
+            <div class="form-group">
+              <label class="form-label" data-english="Count:" data-tamil="எண்ணிக்கை:">Count:</label>
+              <input type="number" class="form-input" id="trouserCount" data-field="trouserCount" min="1" value="1" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-english="Price (Rs.):" data-tamil="விலை (ரூ.):">Price (Rs.):</label>
+              <input type="number" class="form-input" id="trouserPrice" data-field="trouserPrice" min="0" placeholder="Enter price" />
+            </div>
+          </div>
+          <button type="button" class="btn-size-table" onclick="openSizeModal('trouser')" data-english="Enter Trouser Sizes" data-tamil="டிரௌசர் அளவுகளை உள்ளிடவும்">Enter Trouser Sizes</button>
+          <button type="button" class="btn btn-submit btn-add-item" onclick="addItem('trouser')" data-english="Add Trouser" data-tamil="டிரௌசரை சேர்க்க">Add Trouser</button>
+        </div>
+
+        <div class="item-details" id="courtDetails">
+          <h3 style="margin-bottom:16px; font-size:18px;" data-english="Court Details" data-tamil="கோர்ட் விவரங்கள்">Court Details</h3>
+          <div class="detail-row">
+            <div class="form-group">
+              <label class="form-label" data-english="Count:" data-tamil="எண்ணிக்கை:">Count:</label>
+              <input type="number" class="form-input" id="courtCount" data-field="courtCount" min="1" value="1" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-english="Price (Rs.):" data-tamil="விலை (ரூ.):">Price (Rs.):</label>
+              <input type="number" class="form-input" id="courtPrice" data-field="courtPrice" min="0" placeholder="Enter price" />
+            </div>
+          </div>
+          <button type="button" class="btn-size-table" onclick="openSizeModal('court')" data-english="Enter Court Sizes" data-tamil="கோர்ட் அளவுகளை உள்ளிடவும்">Enter Court Sizes</button>
+          <button type="button" class="btn btn-submit btn-add-item" onclick="addItem('court')" data-english="Add Court" data-tamil="கோர்ட்டை சேர்க்க">Add Court</button>
+        </div>
+
+        <div class="added-items" id="addedItems" style="display:none;">
+          <h3 style="margin-bottom:16px; font-size:18px;" data-english="Added Items" data-tamil="சேர்க்கப்பட்ட பொருட்கள்">Added Items</h3>
+          <div id="itemsList"></div>
+          
+          <div class="payment-section" id="paymentSection" style="display:none;">
+            <h3 style="margin-bottom:16px; font-size:18px;" data-english="Payment Details" data-tamil="கட்டண விவரங்கள்">Payment Details</h3>
+            <div class="payment-row">
+              <div class="form-group">
+                <label class="form-label" data-english="Advance Amount (Rs.):" data-tamil="முன்பணத் தொகை (ரூ.):">Advance Amount (Rs.):</label>
+                <input type="number" class="form-input" id="advanceAmount" data-field="advanceAmount" min="0" placeholder="Enter advance amount" />
+                <div class="success-message" id="advanceSuccess" style="display:none;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 6L9 17l-5-5"/>
+                  </svg>
+                  <span data-english="Advance added successfully" data-tamil="முன்பணம் வெற்றிகரமாக சேர்க்கப்பட்டது">Advance added successfully</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-english="Payment Method:" data-tamil="கட்டண முறை:">Payment Method:</label>
+                <select class="form-input" id="paymentMethod">
+                  <option value="cash" data-english="Cash" data-tamil="பணம்">Cash</option>
+                  <option value="upi" data-english="UPI" data-tamil="UPI">UPI</option>
+                  <option value="card" data-english="Card" data-tamil="கார்டு">Card</option>
+                  <option value="bank" data-english="Bank Transfer" data-tamil="வங்கி பரிமாற்றம்">Bank Transfer</option>
+                </select>
+              </div>
+            </div>
+            <button type="button" class="btn btn-submit" onclick="addAdvance()" data-english="Add Advance" data-tamil="முன்பணத்தை சேர்க்க">Add Advance</button>
+          </div>
+          
+          <div class="total-section">
+            <div class="total-label" data-english="Total Amount" data-tamil="மொத்த தொகை">Total Amount</div>
+            <div class="total-amount" id="totalAmount">₹0</div>
+          </div>
+          
+          <div class="balance-section" id="balanceSection" style="display:none;">
+            <div class="balance-label" data-english="Balance Amount" data-tamil="இருப்புத் தொகை">Balance Amount</div>
+            <div class="balance-amount" id="balanceAmount">₹0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button type="button" class="btn btn-back" id="backBtn" data-english="Back" data-tamil="பின்செல்">Back</button>
+        <button type="submit" class="btn btn-submit" id="submitBtn" data-english="Create Bill" data-tamil="பில் உருவாக்க">Create Bill</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal" id="sizeModal">
+    <div class="modal-content">
+      <h2 class="modal-title" id="sizeModalTitle" data-english="Enter Sizes" data-tamil="அளவுகளை உள்ளிடவும்">Enter Sizes</h2>
+      <div id="sizeTableContainer"></div>
+      <button class="btn btn-submit btn-close-modal" onclick="closeSizeModal()" data-english="Save Sizes" data-tamil="அளவுகளை சேமிக்க">Save Sizes</button>
+    </div>
+  </div>
+
+  <div class="modal" id="successModal">
+    <div class="modal-content">
+      <div class="success-icon">✓</div>
+      <h2 class="modal-title" data-english="Bill Created!" data-tamil="பில் உருவாக்கப்பட்டது!">Bill Created!</h2>
+      <p class="modal-text" data-english="Your bill has been created successfully" data-tamil="உங்கள் பில் வெற்றிகரமாக உருவாக்கப்பட்டது">Your bill has been created successfully</p>
+      <div class="bill-number-display" id="createdBillNo"></div>
+      <button class="btn btn-submit" id="doneBtn" style="width:100%; margin-top:20px;" data-english="Done" data-tamil="முடிந்தது">Done</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getFirestore, collection, addDoc, query, where, getDocs, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDBW-WpSJIFT4ndQ87rbQ0UGXWBO6cYSF0",
+      authDomain: "daddy-3-f04d0.firebaseapp.com",
+      projectId: "daddy-3-f04d0",
+      storageBucket: "daddy-3-f04d0.firebasestorage.app",
+      messagingSenderId: "700872095381",
+      appId: "1:700872095381:web:6682b09fa7103e11d00d9c",
+      measurementId: "G-2NJHM6SCCC"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.addedItemsArray = [];
+    window.currentSizeType = '';
+    window.tempSizes = {};
+    window.currentLanguage = 'english';
+    window.advanceAmount = 0;
+    window.paymentMethod = 'cash';
+
+    // Voice Assistant Variables
+    let isListening = false;
+    let recognition = null;
+    let isTyping = false;
+    let currentActiveField = null;
+    let fieldOrder = ['billNo', 'customerName', 'mobileNo', 'billingDate', 'deadlineDate'];
+    let currentFieldIndex = 0;
+    let isInSizeModal = false;
+    let currentSizeField = null;
+    let noiseCancellation = true;
+    let confidenceThreshold = 0.3;
+
+    const voiceAssistant = document.getElementById('voiceAssistant');
+    const voiceStatus = document.getElementById('voiceStatus');
+    const robot = document.getElementById('robot');
+    const robotEyes = document.getElementById('robotEyes');
+    const robotBubble = document.getElementById('robotBubble');
+
+    function updateBillingDate() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const today = `${year}-${month}-${day}`;
+      document.getElementById('billingDate').value = today;
+    }
+
+    updateBillingDate();
+
+    // Language switching
+    document.getElementById('englishBtn').addEventListener('click', () => {
+      switchLanguage('english');
+    });
+
+    document.getElementById('tamilBtn').addEventListener('click', () => {
+      switchLanguage('tamil');
+    });
+
+    function switchLanguage(lang) {
+      window.currentLanguage = lang;
+      localStorage.setItem('preferredLanguage', lang);
+
+      document.getElementById('englishBtn').classList.toggle('active', lang === 'english');
+      document.getElementById('tamilBtn').classList.toggle('active', lang === 'tamil');
+
+      document.querySelectorAll('[data-english]').forEach(element => {
+        element.textContent = lang === 'english'
+          ? element.getAttribute('data-english')
+          : element.getAttribute('data-tamil');
+      });
+
+      // Update placeholders
+      document.getElementById('billNo').placeholder = lang === 'english' ? 'e.g., B001' : 'எ.கா., B001';
+      document.getElementById('customerName').placeholder = lang === 'english' ? 'Enter customer name' : 'வாடிக்கையாளர் பெயரை உள்ளிடவும்';
+      document.getElementById('mobileNo').placeholder = lang === 'english' ? 'Enter mobile number' : 'மொபைல் எண்ணை உள்ளிடவும்';
+      document.getElementById('shirtPrice').placeholder = lang === 'english' ? 'Enter price' : 'விலையை உள்ளிடவும்';
+      document.getElementById('fantPrice').placeholder = lang === 'english' ? 'Enter price' : 'விலையை உள்ளிடவும்';
+      document.getElementById('trouserPrice').placeholder = lang === 'english' ? 'Enter price' : 'விலையை உள்ளிடவும்';
+      document.getElementById('courtPrice').placeholder = lang === 'english' ? 'Enter price' : 'விலையை உள்ளிடவும்';
+      document.getElementById('advanceAmount').placeholder = lang === 'english' ? 'Enter advance amount' : 'முன்பணத் தொகையை உள்ளிடவும்';
+
+      const paymentMethodSelect = document.getElementById('paymentMethod');
+      Array.from(paymentMethodSelect.options).forEach(option => {
+        option.textContent = lang === 'english' 
+          ? option.getAttribute('data-english') 
+          : option.getAttribute('data-tamil');
+      });
+
+      // Update voice recognition language
+      if (recognition) {
+        recognition.lang = lang === 'english' ? 'en-US' : 'ta-IN';
+      }
+
+      updateSizeModalLanguage();
+      displayAddedItems();
+      calculateBalance();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedLang = localStorage.getItem('preferredLanguage');
+      switchLanguage(savedLang === 'tamil' ? 'tamil' : 'english');
+    });
+
+    // Enhanced Speech Recognition with Noise Cancellation
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+      recognition.maxAlternatives = 5;
+
+      recognition.onresult = (event) => {
+        let finalTranscript = '';
+        let interimTranscript = '';
+        let highestConfidence = 0;
+        let bestResult = '';
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const result = event.results[i];
+          const transcript = result[0].transcript;
+          const confidence = result[0].confidence;
+
+          if (result.isFinal) {
+            if (confidence > highestConfidence) {
+              highestConfidence = confidence;
+              bestResult = transcript;
+            }
+            finalTranscript += transcript;
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+
+        // Apply noise cancellation by confidence threshold
+        if (noiseCancellation && highestConfidence < confidenceThreshold) {
+          console.log('Low confidence result ignored:', bestResult, 'Confidence:', highestConfidence);
+          return;
+        }
+
+        // Use the best result if available, otherwise use final transcript
+        const transcriptToProcess = bestResult || finalTranscript;
+        
+        if (transcriptToProcess.trim()) {
+          console.log('Processing:', transcriptToProcess, 'Confidence:', highestConfidence);
+          processVoiceCommand(transcriptToProcess.trim().toLowerCase());
+        }
+      };
+
+      recognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        if (event.error === 'no-speech') {
+          updateVoiceStatus(window.currentLanguage === 'english' ? "I didn't hear anything..." : 'எதுவும் கேட்கவில்லை...');
+        } else if (event.error === 'audio-capture') {
+          updateVoiceStatus(window.currentLanguage === 'english' ? 'No microphone detected' : 'மைக்ரோஃபோன் கண்டறியப்படவில்லை');
+        }
+      };
+
+      recognition.onend = () => {
+        if (isListening) {
+          // Add a small delay before restarting to prevent rapid restarts
+          setTimeout(() => {
+            if (isListening) {
+              recognition.start();
+            }
+          }, 500);
+        }
+      };
+    } else {
+      voiceStatus.textContent = window.currentLanguage === 'english' ? '❌ Not supported' : '❌ ஆதரவில்லை';
+    }
+
+    voiceAssistant.addEventListener('click', () => {
+      if (!recognition) return;
+
+      if (!isListening) {
+        startVoiceListening();
+      } else {
+        stopVoiceListening();
+      }
+    });
+
+    // Remove all robot talking animations from the voice functions
+function startVoiceListening() {
+  isListening = true;
+  recognition.start();
+  updateVoiceStatus(window.currentLanguage === 'english' ? '🎤 Listening...' : '🎤 கேட்கிறேன்...');
+  voiceStatus.classList.add('active', 'listening');
+  voiceAssistant.classList.add('pulse');
+  // Remove: robot.classList.add('talking');
+  voiceAssistant.classList.add('active');
+  
+  // Enable manual typing
+  document.querySelectorAll('.form-input').forEach(input => {
+    input.removeAttribute('readonly');
+  });
+}
+
+function stopVoiceListening() {
+  isListening = false;
+  recognition.stop();
+  updateVoiceStatus(window.currentLanguage === 'english' ? 'Click me!' : 'என்னை கிளிக் செய்!');
+  voiceStatus.classList.remove('listening');
+  voiceStatus.classList.add('active');
+  setTimeout(() => voiceStatus.classList.remove('active'), 2000);
+  voiceAssistant.classList.remove('pulse');
+  // Remove: robot.classList.remove('talking');
+  voiceAssistant.classList.remove('active');
+  
+  if (currentActiveField) {
+    currentActiveField.classList.remove('voice-active');
+    currentActiveField = null;
+  }
+}
+
+    function updateVoiceStatus(text) {
+      voiceStatus.textContent = text;
+      voiceStatus.classList.add('active');
+    }
+
+    // Enhanced voice command processing with better pronunciation handling
+    function processVoiceCommand(transcript) {
+      console.log('Processing command:', transcript);
+      
+      // Enhanced pronunciation variations for better recognition
+      const pronunciationVariations = {
+        // English variations
+        'shirt': ['shirt', 'shert', 'shart', 'shurt', 'shrt'],
+        'pant': ['pant', 'pants', 'panther', 'paint'],
+        'fant': ['fant', 'pant', 'font', 'fent', 'pants'],
+        'trouser': ['trouser', 'trowser', 'trouser', 'trouser'],
+        'court': ['court', 'kurt', 'curt', 'coat', 'cort'],
+        'count': ['count', 'counter', 'county', 'cownt'],
+        'price': ['price', 'prize', 'prise', 'pryce'],
+        'advance': ['advance', 'advans', 'advence', 'advanse'],
+        'clear': ['clear', 'cleer', 'clere', 'clier'],
+        'next': ['next', 'necks', 'nex', 'nekt'],
+        'save': ['save', 'safe', 'saif', 'seif'],
+        'close': ['close', 'cloze', 'clos', 'cloce'],
+        
+        // Tamil variations
+        'சட்டை': ['சட்டை', 'sattai', 'sattay', 'sattae', 'chattai'],
+        'பேண்ட்': ['பேண்ட்', 'pant', 'pand', 'pandu', 'bent'],
+        'டிரௌசர்': ['டிரௌசர்', 'trowser', 'trouser', 'trosar', 'trosur'],
+        'கோர்ட்': ['கோர்ட்', 'court', 'kort', 'kurt', 'coat'],
+        'எண்ணிக்கை': ['எண்ணிக்கை', 'ennikkai', 'ennikai', 'ennakku', 'ennakka'],
+        'விலை': ['விலை', 'vilai', 'vilae', 'viley', 'vilay'],
+        'முன்பணம்': ['முன்பணம்', 'munpanam', 'munbanam', 'munbhanam', 'munpanum'],
+        'அழி': ['அழி', 'azhi', 'azhee', 'azhe', 'azh'],
+        'அடுத்து': ['அடுத்து', 'aduthu', 'aduth', 'adutha', 'adutho'],
+        'சேமி': ['சேமி', 'semi', 'saemi', 'saime', 'saimi'],
+        'மூடு': ['மூடு', 'moodu', 'mudu', 'moodo', 'mooda']
+      };
+
+      // Check for bye/stop
+      if (transcript.includes('bye') || transcript.includes('stop') || 
+          transcript.includes('வணக்கம்') || transcript.includes('நிறுத்து')) {
+        stopVoiceListening();
+        updateVoiceStatus(window.currentLanguage === 'english' ? '👋 Goodbye!' : '👋 வணக்கம்!');
+        return;
+      }
+
+      // Handle size modal commands
+      if (isInSizeModal) {
+        processSizeModalCommands(transcript);
+        return;
+      }
+
+      // Navigation commands - "next" or "அடுத்து"
+      if (transcript.includes('next') || transcript.includes('அடுத்து')) {
+        navigateToNextField();
+        return;
+      }
+
+      // Clear commands
+      if (transcript.includes('clear') || transcript.includes('அழி')) {
+        // Check for specific field clearing
+        const fieldMap = {
+          'bill': 'billNo',
+          'பில்': 'billNo',
+          'bill number': 'billNo',
+          'பில் எண்': 'billNo',
+          'customer': 'customerName',
+          'வாடிக்கையாளர்': 'customerName',
+          'name': 'customerName',
+          'பெயர்': 'customerName',
+          'mobile': 'mobileNo',
+          'மொபைல்': 'mobileNo',
+          'phone': 'mobileNo',
+          'தொலைபேசி': 'mobileNo',
+          'advance': 'advanceAmount',
+          'முன்பணம்': 'advanceAmount',
+          'shirt count': 'shirtCount',
+          'சட்டை எண்ணிக்கை': 'shirtCount',
+          'shirt price': 'shirtPrice',
+          'சட்டை விலை': 'shirtPrice',
+          'fant count': 'fantCount',
+          'பேண்ட் எண்ணிக்கை': 'fantCount',
+          'fant price': 'fantPrice',
+          'பேண்ட் விலை': 'fantPrice',
+          'trouser count': 'trouserCount',
+          'டிரௌசர் எண்ணிக்கை': 'trouserCount',
+          'trouser price': 'trouserPrice',
+          'டிரௌசர் விலை': 'trouserPrice',
+          'court count': 'courtCount',
+          'கோர்ட் எண்ணிக்கை': 'courtCount',
+          'court price': 'courtPrice',
+          'கோர்ட் விலை': 'courtPrice'
+        };
+
+        let fieldCleared = false;
+        for (const [keyword, fieldId] of Object.entries(fieldMap)) {
+          if (transcript.includes(keyword)) {
+            const field = document.getElementById(fieldId);
+            if (field) {
+              clearFieldWithAnimation(field);
+              fieldCleared = true;
+              break;
+            }
+          }
+        }
+
+        // If no specific field mentioned, clear current active field
+        if (!fieldCleared && currentActiveField) {
+          clearFieldWithAnimation(currentActiveField);
+        }
+        return;
+      }
+
+      // Enhanced number recognition with decimal support
+      const numberPattern = /(\d+(?:\.\d+)?)|(point|புள்ளி|\.)/g;
+      const numbers = [];
+      let match;
+      while ((match = numberPattern.exec(transcript)) !== null) {
+        if (match[1]) {
+          numbers.push(match[1]);
+        } else if (match[2] && numbers.length > 0) {
+          // Handle decimal point
+          const lastNumber = numbers[numbers.length - 1];
+          numbers[numbers.length - 1] = lastNumber + '.';
+        }
+      }
+
+      // Count modification commands
+      if (transcript.includes('increase') || transcript.includes('கூட்டு') || 
+          transcript.includes('set') || transcript.includes('அமை') ||
+          transcript.includes('count') || transcript.includes('எண்ணிக்கை')) {
+        
+        if (numbers.length > 0) {
+          const countValue = parseFloat(numbers[0]);
+          
+          if (transcript.includes('shirt') || transcript.includes('சட்டை')) {
+            document.getElementById('shirtCount').value = countValue;
+            updateVoiceStatus(window.currentLanguage === 'english' ? 
+              `Shirt count set to ${countValue}` : 
+              `சட்டை எண்ணிக்கை ${countValue} ஆக அமைக்கப்பட்டது`);
+            return;
+          }
+          
+          if (transcript.includes('fant') || transcript.includes('பேண்ட்')) {
+            document.getElementById('fantCount').value = countValue;
+            updateVoiceStatus(window.currentLanguage === 'english' ? 
+              `Fant count set to ${countValue}` : 
+              `பேண்ட் எண்ணிக்கை ${countValue} ஆக அமைக்கப்பட்டது`);
+            return;
+          }
+          
+          if (transcript.includes('trouser') || transcript.includes('டிரௌசர்')) {
+            document.getElementById('trouserCount').value = countValue;
+            updateVoiceStatus(window.currentLanguage === 'english' ? 
+              `Trouser count set to ${countValue}` : 
+              `டிரௌசர் எண்ணிக்கை ${countValue} ஆக அமைக்கப்பட்டது`);
+            return;
+          }
+          
+          if (transcript.includes('court') || transcript.includes('கோர்ட்')) {
+            document.getElementById('courtCount').value = countValue;
+            updateVoiceStatus(window.currentLanguage === 'english' ? 
+              `Court count set to ${countValue}` : 
+              `கோர்ட் எண்ணிக்கை ${countValue} ஆக அமைக்கப்பட்டது`);
+            return;
+          }
+        }
+      }
+
+      // Price/Amount commands with decimal support
+      if ((transcript.includes('price') || transcript.includes('விலை') || 
+           transcript.includes('amount') || transcript.includes('தொகை') ||
+           transcript.includes('enter') || transcript.includes('உள்ளிடு')) && 
+          numbers.length > 0) {
+        
+        const amountValue = parseFloat(numbers[0]);
+        
+        if (transcript.includes('shirt') || transcript.includes('சட்டை')) {
+          document.getElementById('shirtPrice').value = amountValue;
+          updateVoiceStatus(window.currentLanguage === 'english' ? 
+            `Shirt price set to ₹${amountValue}` : 
+            `சட்டை விலை ₹${amountValue} ஆக அமைக்கப்பட்டது`);
+          return;
+        }
+        
+        if (transcript.includes('fant') || transcript.includes('பேண்ட்')) {
+          document.getElementById('fantPrice').value = amountValue;
+          updateVoiceStatus(window.currentLanguage === 'english' ? 
+            `Fant price set to ₹${amountValue}` : 
+            `பேண்ட் விலை ₹${amountValue} ஆக அமைக்கப்பட்டது`);
+          return;
+        }
+        
+        if (transcript.includes('trouser') || transcript.includes('டிரௌசர்')) {
+          document.getElementById('trouserPrice').value = amountValue;
+          updateVoiceStatus(window.currentLanguage === 'english' ? 
+            `Trouser price set to ₹${amountValue}` : 
+            `டிரௌசர் விலை ₹${amountValue} ஆக அமைக்கப்பட்டது`);
+          return;
+        }
+        
+        if (transcript.includes('court') || transcript.includes('கோர்ட்')) {
+          document.getElementById('courtPrice').value = amountValue;
+          updateVoiceStatus(window.currentLanguage === 'english' ? 
+            `Court price set to ₹${amountValue}` : 
+            `கோர்ட் விலை ₹${amountValue} ஆக அமைக்கப்பட்டது`);
+          return;
+        }
+        
+        if (transcript.includes('advance') || transcript.includes('முன்பணம்')) {
+          document.getElementById('advanceAmount').value = amountValue;
+          updateVoiceStatus(window.currentLanguage === 'english' ? 
+            `Advance amount set to ₹${amountValue}` : 
+            `முன்பணத் தொகை ₹${amountValue} ஆக அமைக்கப்பட்டது`);
+          return;
+        }
+      }
+
+      // Item selection commands with pronunciation variations
+      if (transcript.includes('shirt') || transcript.includes('சட்டை') || 
+          pronunciationVariations.shirt.some(variant => transcript.includes(variant))) {
+        if (transcript.includes('select') || transcript.includes('choose') || transcript.includes('தேர்வு')) {
+          document.getElementById('shirtCheck').checked = true;
+          toggleItemDetails('shirt', true);
+          updateVoiceStatus(window.currentLanguage === 'english' ? 'Shirt selected' : 'சட்டை தேர்ந்தெடுக்கப்பட்டது');
+          return;
+        }
+      }
+
+      if (transcript.includes('fant') || transcript.includes('pant') || transcript.includes('பேண்ட்') ||
+          pronunciationVariations.fant.some(variant => transcript.includes(variant))) {
+        if (transcript.includes('select') || transcript.includes('choose') || transcript.includes('தேர்வு')) {
+          document.getElementById('fantCheck').checked = true;
+          toggleItemDetails('fant', true);
+          updateVoiceStatus(window.currentLanguage === 'english' ? 'Fant selected' : 'பேண்ட் தேர்ந்தெடுக்கப்பட்டது');
+          return;
+        }
+      }
+
+      if (transcript.includes('trouser') || transcript.includes('டிரௌசர்') ||
+          pronunciationVariations.trouser.some(variant => transcript.includes(variant))) {
+        if (transcript.includes('select') || transcript.includes('choose') || transcript.includes('தேர்வு')) {
+          document.getElementById('trouserCheck').checked = true;
+          toggleItemDetails('trouser', true);
+          updateVoiceStatus(window.currentLanguage === 'english' ? 'Trouser selected' : 'டிரௌசர் தேர்ந்தெடுக்கப்பட்டது');
+          return;
+        }
+      }
+
+      if (transcript.includes('court') || transcript.includes('கோர்ட்') ||
+          pronunciationVariations.court.some(variant => transcript.includes(variant))) {
+        if (transcript.includes('select') || transcript.includes('choose') || transcript.includes('தேர்வு')) {
+          document.getElementById('courtCheck').checked = true;
+          toggleItemDetails('court', true);
+          updateVoiceStatus(window.currentLanguage === 'english' ? 'Court selected' : 'கோர்ட் தேர்ந்தெடுக்கப்பட்டது');
+          return;
+        }
+      }
+
+      // Size entry commands
+      if (transcript.includes('size') || transcript.includes('அளவு')) {
+        if (transcript.includes('shirt') || transcript.includes('சட்டை')) {
+          openSizeModal('shirt');
+          updateVoiceStatus(window.currentLanguage === 'english' ? 'Opening shirt sizes' : 'சட்டை அளவுகளை திறக்கிறது');
+          return;
+        }
+        if (transcript.includes('fant') || transcript.includes('pant') || transcript.includes('பேண்ட்')) {
+          openSizeModal('fant');
+          updateVoiceStatus(window.currentLanguage === 'english' ? 'Opening fant sizes' : 'பேண்ட் அளவுகளை திறக்கிறது');
+          return;
+        }
+        if (transcript.includes('trouser') || transcript.includes('டிரௌசர்')) {
+          openSizeModal('trouser');
+          updateVoiceStatus(window.currentLanguage === 'english' ? 'Opening trouser sizes' : 'டிரௌசர் அளவுகளை திறக்கிறது');
+          return;
+        }
+        if (transcript.includes('court') || transcript.includes('கோர்ட்')) {
+          openSizeModal('court');
+          updateVoiceStatus(window.currentLanguage === 'english' ? 'Opening court sizes' : 'கோர்ட் அளவுகளை திறக்கிறது');
+          return;
+        }
+      }
+
+      // Add item commands
+      if (transcript.includes('add') || transcript.includes('சேர்')) {
+        if (transcript.includes('shirt') || transcript.includes('சட்டை')) {
+          addItem('shirt');
+          updateVoiceStatus(window.currentLanguage === 'english' ? 'Shirt added' : 'சட்டை சேர்க்கப்பட்டது');
+          return;
+        }
+        if (transcript.includes('fant') || transcript.includes('பேண்ட்')) {
+          addItem('fant');
+          updateVoiceStatus(window.currentLanguage === 'english' ? 'Fant added' : 'பேண்ட் சேர்க்கப்பட்டது');
+          return;
+        }
+        if (transcript.includes('trouser') || transcript.includes('டிரௌசர்')) {
+          addItem('trouser');
+          updateVoiceStatus(window.currentLanguage === 'english' ? 'Trouser added' : 'டிரௌசர் சேர்க்கப்பட்டது');
+          return;
+        }
+        if (transcript.includes('court') || transcript.includes('கோர்ட்')) {
+          addItem('court');
+          updateVoiceStatus(window.currentLanguage === 'english' ? 'Court added' : 'கோர்ட் சேர்க்கப்பட்டது');
+          return;
+        }
+      }
+
+      // Advance payment commands
+      if ((transcript.includes('advance') || transcript.includes('முன்பணம்')) && 
+          numbers.length > 0) {
+        document.getElementById('advanceAmount').value = numbers[0];
+        addAdvance();
+        updateVoiceStatus(window.currentLanguage === 'english' ? 
+          `Advance of ₹${numbers[0]} added` : 
+          `₹${numbers[0]} முன்பணம் சேர்க்கப்பட்டது`);
+        return;
+      }
+
+      // Create bill command
+      if (transcript.includes('create bill') || transcript.includes('submit') || 
+          transcript.includes('பில் உருவாக்க') || transcript.includes('சமர்ப்பிக்க')) {
+        document.getElementById('billingForm').dispatchEvent(new Event('submit'));
+        return;
+      }
+
+      // Field navigation commands
+      const fieldMap = {
+        'bill': 'billNo',
+        'பில்': 'billNo',
+        'bill number': 'billNo',
+        'பில் எண்': 'billNo',
+        'customer': 'customerName',
+        'வாடிக்கையாளர்': 'customerName',
+        'name': 'customerName',
+        'பெயர்': 'customerName',
+        'mobile': 'mobileNo',
+        'மொபைல்': 'mobileNo',
+        'phone': 'mobileNo',
+        'தொலைபேசி': 'mobileNo',
+        'billing date': 'billingDate',
+        'பில் தேதி': 'billingDate',
+        'deadline date': 'deadlineDate',
+        'காலக்கெடு தேதி': 'deadlineDate',
+        'advance': 'advanceAmount',
+        'முன்பணம்': 'advanceAmount',
+        'shirt count': 'shirtCount',
+        'சட்டை எண்ணிக்கை': 'shirtCount',
+        'shirt price': 'shirtPrice',
+        'சட்டை விலை': 'shirtPrice',
+        'fant count': 'fantCount',
+        'பேண்ட் எண்ணிக்கை': 'fantCount',
+        'fant price': 'fantPrice',
+        'பேண்ட் விலை': 'fantPrice',
+        'trouser count': 'trouserCount',
+        'டிரௌசர் எண்ணிக்கை': 'trouserCount',
+        'trouser price': 'trouserPrice',
+        'டிரௌசர் விலை': 'trouserPrice',
+        'court count': 'courtCount',
+        'கோர்ட் எண்ணிக்கை': 'courtCount',
+        'court price': 'courtPrice',
+        'கோர்ட் விலை': 'courtPrice'
+      };
+
+      // Check for field navigation
+      for (const [keyword, fieldId] of Object.entries(fieldMap)) {
+        if (transcript.includes(keyword) && !transcript.includes('clear')) {
+          const field = document.getElementById(fieldId);
+          if (field) {
+            focusField(field);
+            updateVoiceStatus(window.currentLanguage === 'english' ? 
+              `Ready for ${field.previousElementSibling?.textContent}` : 
+              `${field.previousElementSibling?.textContent} தயார்`);
+            return;
+          }
+        }
+      }
+
+      // Type into current active field with enhanced text processing
+      if (currentActiveField) {
+        const fieldId = currentActiveField.id;
+        
+        // Handle mobile number
+        if (fieldId === 'mobileNo') {
+          const mobileNumbers = transcript.replace(/[^\d]/g, '');
+          if (mobileNumbers) {
+            addToMobileNumber(currentActiveField, mobileNumbers);
+            return;
+          }
+        }
+
+        // Handle numeric fields (prices, counts) with decimal support
+        if (fieldId.includes('Price') || fieldId.includes('Count') || fieldId === 'advanceAmount') {
+          if (numbers.length > 0) {
+            typeIntoField(currentActiveField, numbers[0]);
+            return;
+          }
+        }
+
+        // Handle text fields with enhanced text processing
+        if (fieldId === 'customerName' || fieldId === 'billNo') {
+          let text = transcript;
+          
+          // Remove common filler words with pronunciation variations
+          const fillerWords = [
+            'is', 'the', 'my', 'name', 'bill', 'number',
+            'என்', 'பெயர்', 'எண்', 'thee', 'thuh', 'ma', 'naam'
+          ];
+          fillerWords.forEach(word => {
+            const regex = new RegExp(`\\b${word}\\b`, 'gi');
+            text = text.replace(regex, '');
+          });
+          
+          text = text.trim();
+          
+          if (text) {
+            if (fieldId === 'billNo') {
+              text = text.toUpperCase().replace(/\s+/g, '');
+            } else {
+              text = text.split(' ').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+              ).join(' ');
+            }
+            
+            typeIntoField(currentActiveField, text);
+          }
+        }
+      }
+    }
+
+    function processSizeModalCommands(transcript) {
+      // Exit size modal
+      if (transcript.includes('save') || transcript.includes('close') || 
+          transcript.includes('சேமி') || transcript.includes('மூடு')) {
+        closeSizeModal();
+        updateVoiceStatus(window.currentLanguage === 'english' ? 'Sizes saved' : 'அளவுகள் சேமிக்கப்பட்டன');
+        return;
+      }
+
+      // Navigate to next size field
+      if (transcript.includes('next') || transcript.includes('அடுத்து')) {
+        navigateToNextSizeField();
+        return;
+      }
+
+      // Enhanced number recognition for sizes with decimal support
+      const numberPattern = /(\d+(?:\.\d+)?)|(point|புள்ளி|\.)/g;
+      const numbers = [];
+      let match;
+      while ((match = numberPattern.exec(transcript)) !== null) {
+        if (match[1]) {
+          numbers.push(match[1]);
+        } else if (match[2] && numbers.length > 0) {
+          // Handle decimal point
+          const lastNumber = numbers[numbers.length - 1];
+          numbers[numbers.length - 1] = lastNumber + '.';
+        }
+      }
+
+      // Set size value with decimal support
+      if (numbers.length > 0 && currentSizeField) {
+        const sizeValue = numbers[0];
+        currentSizeField.value = sizeValue;
+        updateVoiceStatus(window.currentLanguage === 'english' ? 
+          `${currentSizeField.previousElementSibling?.textContent} set to ${sizeValue}` : 
+          `${currentSizeField.previousElementSibling?.textContent} ${sizeValue} ஆக அமைக்கப்பட்டது`);
+        
+        // Auto-navigate to next field
+        setTimeout(() => navigateToNextSizeField(), 1000);
+        return;
+      }
+
+      // Handle specific size field navigation
+      const sizeFieldMap = {
+        'length': 'length',
+        'நீளம்': 'length',
+        'shoulder': 'shoulder',
+        'தோள்': 'shoulder',
+        'body': 'bodySize',
+        'உடல்': 'bodySize',
+        'stomach': 'stomach',
+        'வயிறு': 'stomach',
+        'collar': 'collar',
+        'காலர்': 'collar',
+        'hip': 'hip',
+        'இடுப்பு': 'hip',
+        'seetu': 'seetu',
+        'சீட்டு': 'seetu',
+        'thoda': 'thoda',
+        'தொடை': 'thoda'
+      };
+
+      for (const [keyword, fieldName] of Object.entries(sizeFieldMap)) {
+        if (transcript.includes(keyword)) {
+          const field = document.querySelector(`.size-input[data-field="${fieldName}"]`);
+          if (field) {
+            focusSizeField(field);
+            return;
+          }
+        }
+      }
+    }
+
+    function navigateToNextSizeField() {
+      const sizeInputs = Array.from(document.querySelectorAll('.size-input'));
+      if (sizeInputs.length === 0) return;
+      
+      const currentIndex = currentSizeField ? 
+        sizeInputs.indexOf(currentSizeField) : -1;
+      
+      const nextIndex = (currentIndex + 1) % sizeInputs.length;
+      const nextField = sizeInputs[nextIndex];
+      
+      if (nextField) {
+        focusSizeField(nextField);
+      }
+    }
+
+    function focusSizeField(field) {
+      if (currentSizeField) {
+        currentSizeField.classList.remove('voice-active');
+      }
+      currentSizeField = field;
+      field.classList.add('voice-active');
+      field.focus();
+      
+      updateVoiceStatus(window.currentLanguage === 'english' ? 
+        `Ready for ${field.previousElementSibling?.textContent}` : 
+        `${field.previousElementSibling?.textContent} தயார்`);
+    }
+
+    function navigateToNextField() {
+      if (currentFieldIndex < fieldOrder.length - 1) {
+        currentFieldIndex++;
+      } else {
+        currentFieldIndex = 0; // Loop back to the first field
+      }
+      
+      const nextFieldId = fieldOrder[currentFieldIndex];
+      const nextField = document.getElementById(nextFieldId);
+      
+      if (nextField) {
+        focusField(nextField);
+        updateVoiceStatus(window.currentLanguage === 'english' ? 
+          `Moved to ${nextField.previousElementSibling?.textContent}` : 
+          `${nextField.previousElementSibling?.textContent} க்கு நகர்த்தப்பட்டது`);
+      }
+    }
+
+    function focusField(field) {
+      if (currentActiveField) {
+        currentActiveField.classList.remove('voice-active');
+      }
+      currentActiveField = field;
+      field.classList.add('voice-active');
+      field.focus();
+      
+      // Update current field index
+      const fieldId = field.id;
+      if (fieldOrder.includes(fieldId)) {
+        currentFieldIndex = fieldOrder.indexOf(fieldId);
+      }
+    }
+
+    
+// Remove typing animations from these functions
+function clearFieldWithAnimation(field) {
+  if (isTyping) return;
+  
+  // Remove: robot.classList.add('talking');
+  const currentText = field.value;
+  let index = currentText.length;
+
+  const deleteInterval = setInterval(() => {
+    if (index > 0) {
+      field.value = currentText.substring(0, index - 1);
+      index--;
+    } else {
+      clearInterval(deleteInterval);
+      // Remove: robot.classList.remove('talking');
+      updateVoiceStatus(window.currentLanguage === 'english' ? '✨ Cleared!' : '✨ அழிக்கப்பட்டது!');
+    }
+  }, 50);
+}
+
+function addToMobileNumber(field, numbers) {
+  if (isTyping) return;
+
+  const currentLength = field.value.length;
+  const availableSpace = 10 - currentLength;
+
+  if (availableSpace <= 0) {
+    updateVoiceStatus(window.currentLanguage === 'english' ? '✅ Number complete' : '✅ எண் முழுமை');
+    return;
+  }
+
+  const numbersToAdd = numbers.substring(0, availableSpace);
+  
+  isTyping = true;
+  // Remove: robot.classList.add('talking');
+  let index = 0;
+
+  const typingInterval = setInterval(() => {
+    if (index < numbersToAdd.length) {
+      field.value += numbersToAdd[index];
+      index++;
+
+      if (field.value.length === 10) {
+        updateVoiceStatus(window.currentLanguage === 'english' ? '✅ Complete!' : '✅ முழுமை!');
+      }
+    } else {
+      clearInterval(typingInterval);
+      // Remove: robot.classList.remove('talking');
+      isTyping = false;
+    }
+  }, 100);
+}
+
+function typeIntoField(field, text) {
+  if (isTyping) return;
+
+  field.value = '';
+  isTyping = true;
+  // Remove: robot.classList.add('talking');
+  
+  let index = 0;
+  const typingInterval = setInterval(() => {
+    if (index < text.length) {
+      field.value += text[index];
+      index++;
+    } else {
+      clearInterval(typingInterval);
+      // Remove: robot.classList.remove('talking');
+      isTyping = false;
+    }
+  }, 100);
+}
+
+    // Size templates
+    const sizeTemplates = {
+      shirt: [
+        { label: { english: 'Length (Neelam)', tamil: 'நீளம் (நீளம்)' }, field: 'length' },
+        { label: { english: 'Shoulder', tamil: 'தோள்' }, field: 'shoulder' },
+        { label: { english: 'Full Hand Neelam', tamil: 'முழு கை நீளம்' }, field: 'fullHandNeelam' },
+        { label: { english: 'Half Hand Neelam', tamil: 'அரை கை நீளம்' }, field: 'halfHandNeelam' },
+        { label: { english: 'Body Size', tamil: 'உடல் அளவு' }, field: 'bodySize' },
+        { label: { english: 'Stomach', tamil: 'வயிறு' }, field: 'stomach' },
+        { label: { english: 'Collar', tamil: 'காலர்' }, field: 'collar' },
+        { label: { english: 'Cup', tamil: 'கப்' }, field: 'cup' },
+        { label: { english: 'Muttu Loose', tamil: 'முட்டு தளர்வு' }, field: 'muttuLoose' },
+        { label: { english: 'Half Kai Loose', tamil: 'அரை கை தளர்வு' }, field: 'halfKaiLoose' },
+        { label: { english: 'Keela', tamil: 'கீழை' }, field: 'keela', type: 'select', options: [
+          { english: 'Round', tamil: 'வட்டம்' },
+          { english: 'Straight', tamil: 'நேராக' }
+        ]}
+      ],
+      fant: [
+        { label: { english: 'Hip (Iduppu)', tamil: 'இடுப்பு (இடுப்பு)' }, field: 'hip' },
+        { label: { english: 'Length (Neelam)', tamil: 'நீளம் (நீளம்)' }, field: 'length' },
+        { label: { english: 'Seetu (Backside)', tamil: 'சீட்டு (பின்புறம்)' }, field: 'seetu' },
+        { label: { english: 'Thoda', tamil: 'தொடை' }, field: 'thoda' },
+        { label: { english: 'Mutti Loose', tamil: 'முட்டி தளர்வு' }, field: 'muttiLoose' },
+        { label: { english: 'Bottom', tamil: 'அடிப்பகுதி' }, field: 'bottom' },
+        { label: { english: 'Inside', tamil: 'உள்ளே' }, field: 'inside' }
+      ],
+      trouser: [
+        { label: { english: 'Hip (Iduppu)', tamil: 'இடுப்பு (இடுப்பு)' }, field: 'hip' },
+        { label: { english: 'Length (Neelam)', tamil: 'நீளம் (நீளம்)' }, field: 'length' },
+        { label: { english: 'Thoda Loose', tamil: 'தொடை தளர்வு' }, field: 'thodaLoose' },
+        { label: { english: 'Seetu (Backside)', tamil: 'சீட்டு (பின்புறம்)' }, field: 'seetu' }
+      ],
+      court: [
+        { label: { english: 'Length (Neelam)', tamil: 'நீளம் (நீளம்)' }, field: 'length' },
+        { label: { english: 'Shoulder', tamil: 'தோள்' }, field: 'shoulder' },
+        { label: { english: 'Body Loose', tamil: 'உடல் தளர்வு' }, field: 'bodyLoose' },
+        { label: { english: 'Stomach Loose', tamil: 'வயிறு தளர்வு' }, field: 'stomachLoose' },
+        { label: { english: 'Collar', tamil: 'காலர்' }, field: 'collar' }
+      ]
+    };
+
+    function updateSizeModalLanguage() {
+      const sizeModal = document.getElementById('sizeModal');
+      if (sizeModal.classList.contains('active')) {
+        const title = document.getElementById('sizeModalTitle');
+        const container = document.getElementById('sizeTableContainer');
+        
+        const typeNames = {
+          shirt: { english: 'Shirt', tamil: 'சட்டை' },
+          fant: { english: 'Fant', tamil: 'பேண்ட்' },
+          trouser: { english: 'Trouser', tamil: 'டிரௌசர்' },
+          court: { english: 'Court', tamil: 'கோர்ட்' }
+        };
+        
+        if (window.currentLanguage === 'english') {
+          title.textContent = `${typeNames[window.currentSizeType].english} Sizes (in cm)`;
+        } else {
+          title.textContent = `${typeNames[window.currentSizeType].tamil} அளவுகள் (செ.மீ)`;
+        }
+        
+        const template = sizeTemplates[window.currentSizeType];
+        let tableHTML = '<table class="size-table"><thead><tr><th data-english="Measurement" data-tamil="அளவீடு">Measurement</th><th data-english="Value" data-tamil="மதிப்பு">Value</th></tr></thead><tbody>';
+        
+        template.forEach((item, index) => {
+          const savedValue = window.tempSizes[window.currentSizeType] ? window.tempSizes[window.currentSizeType][item.field] : '';
+          const label = window.currentLanguage === 'english' ? item.label.english : item.label.tamil;
+          const placeholder = window.currentLanguage === 'english' ? 
+            `Enter ${item.label.english.toLowerCase()}` : 
+            `${item.label.tamil} உள்ளிடவும்`;
+          
+          if(item.type === 'select') {
+            tableHTML += `<tr><td>${label}</td><td><select class="form-input" data-field="${item.field}" style="height:auto;">`;
+            item.options.forEach(opt => {
+              const optionText = window.currentLanguage === 'english' ? opt.english : opt.tamil;
+              tableHTML += `<option value="${optionText}" ${savedValue === opt.english || savedValue === opt.tamil ? 'selected' : ''}>${optionText}</option>`;
+            });
+            tableHTML += `</select></td></tr>`;
+          } else {
+            tableHTML += `<tr><td>${label}</td><td><input type="text" class="form-input size-input" data-field="${item.field}" data-index="${index}" value="${savedValue}" placeholder="${placeholder}" /></td></tr>`;
+          }
+        });
+        
+        tableHTML += '</tbody></table>';
+        container.innerHTML = tableHTML;
+        
+        const tableHeaders = container.querySelectorAll('th');
+        tableHeaders.forEach(header => {
+          if (window.currentLanguage === 'english') {
+            header.textContent = header.getAttribute('data-english');
+          } else {
+            header.textContent = header.getAttribute('data-tamil');
+          }
+        });
+        
+        attachSizeInputListeners();
+        
+        // Focus on first size field
+        const firstInput = container.querySelector('.size-input');
+        if (firstInput) {
+          focusSizeField(firstInput);
+        }
+      }
+    }
+
+    function attachSizeInputListeners() {
+      const sizeInputs = document.querySelectorAll('.size-input');
+      sizeInputs.forEach((input) => {
+        input.removeEventListener('keypress', handleSizeInputKeypress);
+        input.addEventListener('keypress', handleSizeInputKeypress);
+      });
+    }
+
+    function handleSizeInputKeypress(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const currentIndex = parseInt(e.target.getAttribute('data-index'));
+        const nextIndex = currentIndex + 1;
+        const nextInput = document.querySelector(`.size-input[data-index="${nextIndex}"]`);
+        
+        if (nextInput) {
+          focusSizeField(nextInput);
+        } else {
+          document.querySelector('.btn-close-modal').focus();
+        }
+      }
+    }
+
+    document.getElementById('shirtCheck').addEventListener('change', function() {
+      toggleItemDetails('shirt', this.checked);
+    });
+    document.getElementById('fantCheck').addEventListener('change', function() {
+      toggleItemDetails('fant', this.checked);
+    });
+    document.getElementById('trouserCheck').addEventListener('change', function() {
+      toggleItemDetails('trouser', this.checked);
+    });
+    document.getElementById('courtCheck').addEventListener('change', function() {
+      toggleItemDetails('court', this.checked);
+    });
+
+    function toggleItemDetails(type, show) {
+      const details = document.getElementById(type + 'Details');
+      const checkbox = document.getElementById(type + 'Checkbox');
+      
+      if(show) {
+        details.classList.add('active');
+        checkbox.classList.add('selected');
+      } else {
+        details.classList.remove('active');
+        checkbox.classList.remove('selected');
+      }
+    }
+
+    window.openSizeModal = function(type) {
+      window.currentSizeType = type;
+      const modal = document.getElementById('sizeModal');
+      const title = document.getElementById('sizeModalTitle');
+      const container = document.getElementById('sizeTableContainer');
+      
+      const typeNames = {
+        shirt: { english: 'Shirt', tamil: 'சட்டை' },
+        fant: { english: 'Fant', tamil: 'பேண்ட்' },
+        trouser: { english: 'Trouser', tamil: 'டிரௌசர்' },
+        court: { english: 'Court', tamil: 'கோர்ட்' }
+      };
+      
+      if (window.currentLanguage === 'english') {
+        title.textContent = `${typeNames[type].english} Sizes (in cm)`;
+      } else {
+        title.textContent = `${typeNames[type].tamil} அளவுகள் (செ.மீ)`;
+      }
+      
+      const template = sizeTemplates[type];
+      let tableHTML = '<table class="size-table"><thead><tr><th data-english="Measurement" data-tamil="அளவீடு">Measurement</th><th data-english="Value" data-tamil="மதிப்பு">Value</th></tr></thead><tbody>';
+      
+      template.forEach((item, index) => {
+        const savedValue = window.tempSizes[type] ? window.tempSizes[type][item.field] : '';
+        const label = window.currentLanguage === 'english' ? item.label.english : item.label.tamil;
+        const placeholder = window.currentLanguage === 'english' ? 
+          `Enter ${item.label.english.toLowerCase()}` : 
+          `${item.label.tamil} உள்ளிடவும்`;
+        
+        if(item.type === 'select') {
+          tableHTML += `<tr><td>${label}</td><td><select class="form-input" data-field="${item.field}" style="height:auto;">`;
+          item.options.forEach(opt => {
+            const optionText = window.currentLanguage === 'english' ? opt.english : opt.tamil;
+            tableHTML += `<option value="${optionText}" ${savedValue === opt.english || savedValue === opt.tamil ? 'selected' : ''}>${optionText}</option>`;
+          });
+          tableHTML += `</select></td></tr>`;
+        } else {
+          tableHTML += `<tr><td>${label}</td><td><input type="text" class="form-input size-input" data-field="${item.field}" data-index="${index}" value="${savedValue}" placeholder="${placeholder}" /></td></tr>`;
+        }
+      });
+      
+      tableHTML += '</tbody></table>';
+      container.innerHTML = tableHTML;
+      
+      const tableHeaders = container.querySelectorAll('th');
+      tableHeaders.forEach(header => {
+        if (window.currentLanguage === 'english') {
+          header.textContent = header.getAttribute('data-english');
+        } else {
+          header.textContent = header.getAttribute('data-tamil');
+        }
+      });
+      
+      attachSizeInputListeners();
+      
+      modal.classList.add('active');
+      isInSizeModal = true;
+      
+      const firstInput = container.querySelector('.size-input');
+      if (firstInput) {
+        focusSizeField(firstInput);
+      }
+    };
+
+    window.closeSizeModal = function() {
+      const type = window.currentSizeType;
+      const modal = document.getElementById('sizeModal');
+      const inputs = modal.querySelectorAll('input[data-field], select[data-field]');
+      
+      if(!window.tempSizes[type]) {
+        window.tempSizes[type] = {};
+      }
+      
+      inputs.forEach(input => {
+        window.tempSizes[type][input.dataset.field] = input.value;
+      });
+      
+      modal.classList.remove('active');
+      isInSizeModal = false;
+      currentSizeField = null;
+    };
+
+    window.addItem = function(type) {
+      const count = parseInt(document.getElementById(type + 'Count').value);
+      const price = parseFloat(document.getElementById(type + 'Price').value);
+      
+      if(!count || count < 1) {
+        alert(window.currentLanguage === 'english' ? 'Please enter a valid count' : 'சரியான எண்ணிக்கையை உள்ளிடவும்');
+        return;
+      }
+      
+      if(!price || price < 0) {
+        alert(window.currentLanguage === 'english' ? 'Please enter a valid price' : 'சரியான விலையை உள்ளிடவும்');
+        return;
+      }
+      
+      if(!window.tempSizes[type] || Object.keys(window.tempSizes[type]).length === 0) {
+        alert(window.currentLanguage === 'english' ? 'Please enter size details' : 'அளவு விவரங்களை உள்ளிடவும்');
+        return;
+      }
+      
+      const item = {
+        type: type,
+        count: count,
+        price: price,
+        sizes: {...window.tempSizes[type]},
+        total: count * price
+      };
+      
+      window.addedItemsArray.push(item);
+      displayAddedItems();
+      calculateTotal();
+      
+      if(window.addedItemsArray.length === 1) {
+        document.getElementById('paymentSection').style.display = 'block';
+      }
+      
+      document.getElementById(type + 'Check').checked = false;
+      toggleItemDetails(type, false);
+      document.getElementById(type + 'Count').value = '1';
+      document.getElementById(type + 'Price').value = '';
+      window.tempSizes[type] = {};
+      
+      // Animation for item added
+      const itemsList = document.getElementById('itemsList');
+      const lastItem = itemsList.lastElementChild;
+      if (lastItem) {
+        lastItem.classList.add('item-added');
+      }
+    };
+
+    function displayAddedItems() {
+      const container = document.getElementById('itemsList');
+      const section = document.getElementById('addedItems');
+      
+      if(window.addedItemsArray.length === 0) {
+        section.style.display = 'none';
+        return;
+      }
+      
+      section.style.display = 'block';
+      let html = '';
+      
+      window.addedItemsArray.forEach((item, index) => {
+        const typeName = item.type.charAt(0).toUpperCase() + item.type.slice(1);
+        const countText = window.currentLanguage === 'english' ? 'Count' : 'எண்ணிக்கை';
+        const priceText = window.currentLanguage === 'english' ? 'Price per item' : 'ஒரு பொருளின் விலை';
+        const subtotalText = window.currentLanguage === 'english' ? 'Subtotal' : 'துணைத்தொகை';
+        const viewSizesText = window.currentLanguage === 'english' ? 'View Sizes' : 'அளவுகளை காண்க';
+        
+        html += `
+          <div class="item-card">
+            <div class="item-card-header">
+              <div class="item-card-title">${typeName}</div>
+              <button class="btn-remove" onclick="removeItem(${index})">×</button>
+            </div>
+            <div class="item-info"><strong>${countText}:</strong> ${item.count}</div>
+            <div class="item-info"><strong>${priceText}:</strong> ₹${item.price}</div>
+            <div class="item-info"><strong>${subtotalText}:</strong> ₹${item.total}</div>
+            <button class="btn-size-table" onclick="viewSizes(${index})">${viewSizesText}</button>
+          </div>
+        `;
+      });
+      
+      container.innerHTML = html;
+    }
+
+    window.removeItem = function(index) {
+      const confirmText = window.currentLanguage === 'english' ? 'Remove this item?' : 'இந்த பொருளை நீக்கவா?';
+      if(confirm(confirmText)) {
+        window.addedItemsArray.splice(index, 1);
+        displayAddedItems();
+        calculateTotal();
+        
+        if(window.addedItemsArray.length === 0) {
+          document.getElementById('paymentSection').style.display = 'none';
+          document.getElementById('balanceSection').style.display = 'none';
+        }
+      }
+    };
+
+    window.viewSizes = function(index) {
+      const item = window.addedItemsArray[index];
+      const modal = document.getElementById('sizeModal');
+      const title = document.getElementById('sizeModalTitle');
+      const container = document.getElementById('sizeTableContainer');
+      
+      const typeNames = {
+        shirt: { english: 'Shirt', tamil: 'சட்டை' },
+        fant: { english: 'Fant', tamil: 'பேண்ட்' },
+        trouser: { english: 'Trouser', tamil: 'டிரௌசர்' },
+        court: { english: 'Court', tamil: 'கோர்ட்' }
+      };
+      
+      if (window.currentLanguage === 'english') {
+        title.textContent = `${typeNames[item.type].english} Sizes (View Only)`;
+      } else {
+        title.textContent = `${typeNames[item.type].tamil} அளவுகள் (பார்வை மட்டும்)`;
+      }
+      
+      const template = sizeTemplates[item.type];
+      let tableHTML = '<table class="size-table"><thead><tr><th data-english="Measurement" data-tamil="அளவீடு">Measurement</th><th data-english="Value" data-tamil="மதிப்பு">Value</th></tr></thead><tbody>';
+      
+      if(item.sizes) {
+        template.forEach(field => {
+          const value = item.sizes[field.field] || '';
+          const label = window.currentLanguage === 'english' ? field.label.english : field.label.tamil;
+          tableHTML += `<tr><td>${label}</td><td>${value}</td></tr>`;
+        });
+      } else {
+        tableHTML = `<tr><td colspan="2" style="text-align:center;">${window.currentLanguage === 'english' ? 'No size data available' : 'அளவு தரவு இல்லை'}</td></tr>`;
+      }
+      
+      tableHTML += '</tbody></table>';
+      container.innerHTML = tableHTML;
+      
+      const tableHeaders = container.querySelectorAll('th');
+      tableHeaders.forEach(header => {
+        if (window.currentLanguage === 'english') {
+          header.textContent = header.getAttribute('data-english');
+        } else {
+          header.textContent = header.getAttribute('data-tamil');
+        }
+      });
+      
+      modal.classList.add('active');
+    };
+
+    function calculateTotal() {
+      const total = window.addedItemsArray.reduce((sum, item) => sum + item.total, 0);
+      document.getElementById('totalAmount').textContent = `₹${total}`;
+      calculateBalance();
+      
+      // Animation for total calculation
+      const totalSection = document.querySelector('.total-section');
+      totalSection.classList.add('calculating');
+      setTimeout(() => {
+        totalSection.classList.remove('calculating');
+      }, 1000);
+    }
+
+    function calculateBalance() {
+      const total = window.addedItemsArray.reduce((sum, item) => sum + item.total, 0);
+      const balance = total - window.advanceAmount;
+      document.getElementById('balanceAmount').textContent = `₹${balance}`;
+      
+      if(window.advanceAmount > 0) {
+        document.getElementById('balanceSection').style.display = 'block';
+      } else {
+        document.getElementById('balanceSection').style.display = 'none';
+      }
+    }
+
+    window.addAdvance = function() {
+      const advanceInput = document.getElementById('advanceAmount');
+      const advanceAmount = parseFloat(advanceInput.value);
+      const totalAmount = window.addedItemsArray.reduce((sum, item) => sum + item.total, 0);
+      
+      if(!advanceAmount || advanceAmount < 0) {
+        alert(window.currentLanguage === 'english' ? 'Please enter a valid advance amount' : 'சரியான முன்பணத் தொகையை உள்ளிடவும்');
+        return;
+      }
+      
+      if(advanceAmount > totalAmount) {
+        alert(window.currentLanguage === 'english' ? 'Advance amount cannot exceed total amount' : 'முன்பணத் தொகை மொத்த தொகையை விட அதிகமாக இருக்கக்கூடாது');
+        return;
+      }
+      
+      window.advanceAmount = advanceAmount;
+      window.paymentMethod = document.getElementById('paymentMethod').value;
+      
+      const successMessage = document.getElementById('advanceSuccess');
+      successMessage.style.display = 'flex';
+      
+      advanceInput.classList.add('success');
+      
+      calculateBalance();
+      
+      // Animation for payment success
+      const paymentSection = document.getElementById('paymentSection');
+      paymentSection.classList.add('payment-success');
+      setTimeout(() => {
+        paymentSection.classList.remove('payment-success');
+      }, 700);
+      
+      setTimeout(() => {
+        successMessage.style.display = 'none';
+        advanceInput.classList.remove('success');
+      }, 3000);
+    };
+
+    document.getElementById('billNo').addEventListener('input', async function() {
+      const billNo = this.value.trim().toUpperCase();
+      const errorElement = document.getElementById('billNoError');
+      
+      if (billNo.length === 0) {
+        this.classList.remove('error');
+        errorElement.style.display = 'none';
+        return;
+      }
+
+      try {
+        const q = query(collection(db, 'bills'), where('billNo', '==', billNo));
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+          this.classList.add('error');
+          errorElement.style.display = 'flex';
+        } else {
+          this.classList.remove('error');
+          errorElement.style.display = 'none';
+        }
+      } catch (error) {
+        console.error('Error checking bill number:', error);
+        this.classList.remove('error');
+        errorElement.style.display = 'none';
+      }
+    });
+
+    document.getElementById('billingForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const billNo = document.getElementById('billNo').value.trim().toUpperCase();
+      const customerName = document.getElementById('customerName').value.trim();
+      const mobileNo = document.getElementById('mobileNo').value.trim();
+      const billingDate = document.getElementById('billingDate').value;
+      const deadlineDate = document.getElementById('deadlineDate').value;
+      const billNoInput = document.getElementById('billNo');
+      const errorElement = document.getElementById('billNoError');
+
+      if(!/^[0-9]{10}$/.test(mobileNo)){
+        alert(window.currentLanguage === 'english' ? 'Please enter a valid 10-digit mobile number' : 'சரியான 10 இலக்க மொபைல் எண்ணை உள்ளிடவும்');
+        return;
+      }
+
+      if(window.addedItemsArray.length === 0) {
+        alert(window.currentLanguage === 'english' ? 'Please add at least one item' : 'குறைந்தது ஒரு பொருளையாவது சேர்க்கவும்');
+        return;
+      }
+
+      try {
+        const q = query(collection(db, 'bills'), where('billNo', '==', billNo));
+        const querySnapshot = await getDocs(q);
+        
+        if(!querySnapshot.empty){
+          billNoInput.classList.add('error');
+          errorElement.style.display = 'flex';
+          billNoInput.focus();
+          return;
+        }
+      } catch (error) {
+        console.error('Error checking bill number:', error);
+        alert(window.currentLanguage === 'english' ? 'Error checking bill number. Please try again.' : 'பில் எண்ணை சரிபார்க்கும் போது பிழை. மீண்டும் முயற்சிக்கவும்.');
+        return;
+      }
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = window.currentLanguage === 'english' ? 'Creating...' : 'உருவாக்குகிறது...';
+
+      try {
+        const totalAmount = window.addedItemsArray.reduce((sum, item) => sum + item.total, 0);
+        const balanceAmount = totalAmount - window.advanceAmount;
+
+        const billData = {
+          billNo: billNo,
+          customerName: customerName,
+          mobileNo: mobileNo,
+          billingDate: billingDate,
+          deadlineDate: deadlineDate,
+          items: window.addedItemsArray,
+          totalAmount: totalAmount,
+          advanceAmount: window.advanceAmount,
+          balanceAmount: balanceAmount,
+          paymentMethod: window.paymentMethod,
+          status: balanceAmount > 0 ? 'Pending' : 'Paid',
+          createdAt: Timestamp.now()
+        };
+
+        await addDoc(collection(db, 'bills'), billData);
+
+        document.getElementById('createdBillNo').textContent = billNo;
+        document.getElementById('successModal').classList.add('active');
+
+      } catch (error) {
+        console.error('Error creating bill:', error);
+        alert(window.currentLanguage === 'english' ? 'Error creating bill: ' + error.message : 'பில் உருவாக்கும் போது பிழை: ' + error.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = window.currentLanguage === 'english' ? 'Create Bill' : 'பில் உருவாக்க';
+      }
+    });
+
+    document.getElementById('backBtn').addEventListener('click', () => {
+      document.body.classList.add('transitioning');
+      setTimeout(() => window.location.href = 'workspace.html', 600);
+    });
+
+    document.getElementById('doneBtn').addEventListener('click', () => {
+      document.body.classList.add('transitioning');
+      setTimeout(() => window.location.href = 'workspace.html', 600);
+    });
+
+    document.getElementById('deadlineDate').addEventListener('change', function() {
+      const billingDate = document.getElementById('billingDate').value;
+      const deadlineDate = this.value;
+      
+      if(billingDate && deadlineDate && new Date(deadlineDate) < new Date(billingDate)) {
+        alert(window.currentLanguage === 'english' ? 'Deadline date must be after billing date' : 'காலக்கெடு தேதி பில் தேதிக்கு பிறகு இருக்க வேண்டும்');
+        this.value = '';
+      }
+    });
+
+    document.getElementById('billNo').addEventListener('blur', function() {
+      this.value = this.value.toUpperCase();
+    });
+  </script>
+</body>
+</html>
